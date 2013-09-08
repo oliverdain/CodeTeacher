@@ -7,13 +7,16 @@ var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
+var swig = require('swig');
 
 var app = express();
 
+app.engine('swig', swig.renderFile);
+
 // all environments
 app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
 app.set('view engine', 'swig');
+app.set('views', __dirname + '/views');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -27,6 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
+  // Disable the swig cache so templates are always re-rendered
+  swig.setDefaults({ cache: false });
 }
 
 app.get('/', routes.index);
