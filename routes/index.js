@@ -53,6 +53,6 @@ exports.setup = function(nodeApp) {
     post: {}
   };
 
-  get('EDITOR', '/edit', handlers.index);
+  get('EDITOR', '/edit', handlers.editor);
 };
 
