@@ -29,6 +29,7 @@
 
 {%block body %}
    {% parent %}
+   <h1>Live Editor</h1>
    <div id="editor-tabs">
       <ul>
          <li><a href="#editor-wrap">HMTL</a></li>
