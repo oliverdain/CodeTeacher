@@ -1,5 +1,7 @@
-handlers = require('./handlers');
-verbs = require('./verbs');
+var handlers = require('./handlers');
+var verbs = require('./verbs');
+var auth = require('./auth');
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -10,6 +12,7 @@ verbs = require('./verbs');
  * All routes get set up from here.
  */
 exports.setup = function() {
-  verbs.get('EDITOR', '/edit', handlers.editor);
+  auth.setup();
+  verbs.get('EDITOR', '/edit', auth.requireAuth, handlers.editor);
 };
 

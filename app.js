@@ -8,7 +8,7 @@ var routeSetup = require('./routes/setup');
 var http = require('http');
 var path = require('path');
 var swig = require('swig');
-var verbes = require('./routes/verbs');
+var verbs = require('./routes/verbs');
 
 var app = express();
 

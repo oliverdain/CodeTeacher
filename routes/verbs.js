@@ -35,6 +35,19 @@ exports.get = function(name, path) {
   app.locals.routes.get[name] = path;
 };
 
+exports.post = function(name, path) {
+  applyVerb(app.post, arguments);
+  app.locals.routes.post[name] = path;
+};
+
+/**
+ * Method to allow modules that don't have access to app.locals to find routes
+ * by name.
+ */
+exports.routes = function(verb, name) {
+  return app.locals.routes[verb][name];
+}
+
 exports.init = function(nodeApp) {
   app = nodeApp;
 
