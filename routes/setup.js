@@ -1,0 +1,15 @@
+handlers = require('./handlers');
+verbs = require('./verbs');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Setup routes here.
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * All routes get set up from here.
+ */
+exports.setup = function() {
+  verbs.get('EDITOR', '/edit', handlers.editor);
+};
+

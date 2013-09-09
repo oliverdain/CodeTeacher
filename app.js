@@ -4,10 +4,11 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
+var routeSetup = require('./routes/setup');
 var http = require('http');
 var path = require('path');
 var swig = require('swig');
+var verbes = require('./routes/verbs');
 
 var app = express();
 
@@ -21,8 +22,8 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
-app.use(express.session());
+app.use(express.cookieParser());
+app.use(express.cookieSession({secret: 'LASNFQU#$%)*@J'}));
 app.use(app.router);
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -34,7 +35,9 @@ if ('development' == app.get('env')) {
   swig.setDefaults({ cache: false });
 }
 
-routes.setup(app);
+verbs.init(app);
+
+routeSetup.setup();
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

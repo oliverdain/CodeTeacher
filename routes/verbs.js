@@ -1,5 +1,4 @@
 _ = require('underscore');
-handlers = require('./handlers');
 
 var app;
 
@@ -21,38 +20,26 @@ var app;
  *
  * @param {function} verb app.get, app.post, or whatever the verb is
  *
- * @param {Array} args an array such that args.slice(1) returns the correct arguments to
- * app.get, app.post, etc. (e.g. the 1st value in the slice is the path and the
- * rest are functions to call.
+ * @param {Array} args an array such that args.slice(1) returns the correct
+ * arguments to app.get, app.post, etc. (e.g. the 1st value in the slice is the
+ * path and the rest are functions to call.
  */
 var applyVerb = function(verb, args) {
-  console.log('applyVerb called');
   args = _.toArray(args);
-  console.log('Calling apply on %s with %s', verb, args.slice(1));
   verb.apply(app, args.slice(1));
 };
 
 
-var get = function(name, path) {
-  console.log('get called.');
+exports.get = function(name, path) {
   applyVerb(app.get, arguments);
   app.locals.routes.get[name] = path;
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// Setup routes here.
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * All routes get set up from here.
- */
-exports.setup = function(nodeApp) {
+exports.init = function(nodeApp) {
   app = nodeApp;
+
   app.locals.routes = {
     get: {},
     post: {}
   };
-
-  get('EDITOR', '/edit', handlers.editor);
-};
-
+}
