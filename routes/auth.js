@@ -14,7 +14,7 @@ var isAuthenticated = function(req) {
 }
 
 var login = function(req, res, next) {
-  res.render('login', {});
+  res.render('login', {flash: req.flash('error')});
 }
 
 // Constants for use with crypto.pbkdf2
@@ -24,34 +24,53 @@ var SALT_LENGHT = 256;
 
 var auth = function(req, res, next) {
   var storedHash;
-  async.waterfall([
-      _.partial(db.getUserData, req.body.username),
 
-      function(data, next) {
-        // Copy to closure-captured storedHash variable so I can access it
-        // futher down.
-        storedHash = data.passhash;
-        crypto.pbkdf2(
-          req.body.password, data.salt, HASH_ITERS, HASH_LENGTH, next);
+  async.waterfall([
+      // For the life of me, I can't figure out why this is necessary!  This is
+      // equivalent to _.partial(db.getUserData, req.body.username), but somehow
+      // that does some very strange things with waterfall if sqlite returns
+      // undefined (e.g. the username wasn't found). This fixes it for some
+      // reason.
+      function(callback) {
+        db.getUserData(req.body.username, function(err, data) {
+          if (err) {
+            callback(err);
+          } else {
+            callback(null, data);
+          }
+        });
+      },
+
+      function(data, callback) {
+        if (data === undefined) {
+          callback(new Error('Username not found'));
+        } else  {
+          console.log('Data is: %s', data);
+          console.dir(data);
+          // Copy to closure-captured storedHash variable so I can access it
+          // futher down.
+          storedHash = data.passhash;
+          crypto.pbkdf2(
+            req.body.password, data.salt, HASH_ITERS, HASH_LENGTH, callback);
+        }
       }],
 
       function(err, computedHash) {
-        computedHash = computedHash.toString('hex');
-
         if (err) {
           console.warn('Error checking user credentials:\n%s', err);
-          req.flash('error', err);
+          req.flash('error', err.toString());
           res.redirect(verbs.routes('get', 'LOGIN'));
-        }
-
-        if (computedHash === storedHash) {
-          console.info('User password is correct. Authenticated.');
-          req.session.user = req.body.username;
-          res.redirect('/');
         } else {
-          console.info('Bad password for %s', req.body.username);
-          req.flash('error',  'Incorrect password');
-          res.redirect(verbs.routes('get', 'LOGIN'));
+          computedHash = computedHash.toString('hex');
+          if (computedHash === storedHash) {
+            console.info('User password is correct. Authenticated.');
+            req.session.user = req.body.username;
+            res.redirect('/');
+          } else {
+            console.info('Bad password for %s', req.body.username);
+            req.flash('error',  'Incorrect password');
+            res.redirect(verbs.routes('get', 'LOGIN'));
+          }
         }
       });
 };

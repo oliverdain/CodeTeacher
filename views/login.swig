@@ -1,9 +1,11 @@
-{% extends 'master.swig' %}
+{% extends 'flash.swig' %}
 
 {% block head %}
+   {% parent %}
 {% endblock %}
 
 {% block body %}
+{% parent %}
 <form action="/auth" method="post">
     <div>
         <label>Username:</label>
