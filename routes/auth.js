@@ -28,6 +28,8 @@ var auth = function(req, res, next) {
       _.partial(db.getUserData, req.body.username),
 
       function(data, next) {
+        // Copy to closure-captured storedHash variable so I can access it
+        // futher down.
         storedHash = data.passhash;
         crypto.pbkdf2(
           req.body.password, data.salt, HASH_ITERS, HASH_LENGTH, next);
