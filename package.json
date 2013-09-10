@@ -10,6 +10,8 @@
     "swig": "*",
     "less-middleware": "*",
     "sqlite3": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "async": "*",
+    "connect-flash": "*"
   }
 }

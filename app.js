@@ -9,6 +9,7 @@ var http = require('http');
 var path = require('path');
 var swig = require('swig');
 var verbs = require('./routes/verbs');
+var flash = require('connect-flash');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.set('views', __dirname + '/views');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
+app.use(flash());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(express.cookieSession({secret: 'LASNFQU#$%)*@J'}));
