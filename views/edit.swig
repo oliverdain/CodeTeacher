@@ -37,6 +37,11 @@
          </div>
       </div>
    </div>
+   <div id="footer-row">
+      <div id="footer-content">
+         <input type="button" value="save"></input>
+      </div>
+   </div>
 
    <script>
       var handleTabChange = function(event, ui) {
