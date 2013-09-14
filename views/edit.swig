@@ -14,33 +14,27 @@
 
    <script src="javascript/third_party/jquery-ui-1.10.3.custom.min.js"></script>
    <link rel=stylesheet href="stylesheets/third_party/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css">
-
-   <style type=text/css>
-      .CodeMirror {
-        width: 100%;
-        border: 1px solid black;
-      }
-      #preview {
-         width: 100%;
-         border: 1px solid black;
-      }
-    </style>
+   <link rel=stylesheet href="stylesheets/edit.css">
 {% endblock %}
 
 {%block body %}
    {% parent %}
-   <h1>Live Editor</h1>
-   <div id="editor-tabs">
-      <ul>
-         <li><a href="#editor-wrap">HMTL</a></li>
-         <li><a href="#preview-wrap">Output</a></li>
-      </ul>
-      <div id="editor-wrap">
-         <textarea id="html-code" name="html-code">
-         </textarea>
-      </div>
-      <div id="preview-wrap">
-         <iframe id="preview"></iframe>
+   <div id="header">
+      <h1>Live Editor</h1>
+   </div>
+   <div id="tab-container">
+      <div id="editor-tabs">
+         <ul>
+            <li><a href="#editor-wrap">HMTL</a></li>
+            <li><a href="#preview-wrap">Output</a></li>
+         </ul>
+         <div id="editor-wrap">
+            <textarea id="html-code" name="html-code">
+            </textarea>
+         </div>
+         <div id="preview-wrap">
+            <iframe id="preview"></iframe>
+         </div>
       </div>
    </div>
 
@@ -59,7 +53,8 @@
 
       $(document).ready(function() {
          $('#editor-tabs').tabs({
-            activate: handleTabChange
+            activate: handleTabChange,
+            heightStyle: "fill"
          });
       });
 
