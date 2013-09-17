@@ -64,7 +64,7 @@ var auth = function(req, res, next) {
           if (computedHash === storedHash) {
             console.info('User password is correct. Authenticated.');
             req.session.user = req.body.username;
-            res.redirect('/');
+            res.redirect(verbs.routes('get', 'HOME'));
           } else {
             console.info('Bad password for %s', req.body.username);
             req.flash('error',  'Incorrect password');
@@ -130,7 +130,7 @@ var onRegister = function(req, res, next) {
           }
           res.redirect(verbs.routes('get', 'REGISTER'));
         } else {
-          res.redirect('/');
+          res.redirect(verbs.routes('get', 'HOME'));
         }
       });
     }

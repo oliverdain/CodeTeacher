@@ -14,5 +14,6 @@ var auth = require('./auth');
 exports.setup = function() {
   auth.setup();
   verbs.get('EDITOR', '/edit', auth.requireAuth, handlers.editor);
+  verbs.get('HOME', '/', auth.requireAuth, handlers.home);
 };
 
