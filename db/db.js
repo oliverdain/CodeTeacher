@@ -20,4 +20,11 @@ exports.getUserData = function(uname, cb) {
   db.get('select * from users where uname = ?', uname, cb);
 }
 
+exports.registerUser = function(userdata, cb) {
+  console.log('registerUser called with:');
+  console.dir(userdata);
+  db.run('insert into users (uname, fullname, email, salt, passhash) ' +
+      'values ($username, $fullname, $email, $salt, $pass)', userdata, cb);
+}
+
 setup();

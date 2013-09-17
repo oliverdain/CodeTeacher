@@ -6,7 +6,7 @@
 
 {% block body %}
 {% parent %}
-<form action="/auth" method="post">
+<form action="{{routes.post.AUTH}}" method="post">
     <div>
         <label>Username:</label>
         <input type="text" name="username"/>

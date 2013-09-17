@@ -11,12 +11,15 @@
 {% block body %}
 {% parent %}
 {% if flash %}
-   <div class="flash-error">
+   {% set flash_class = "show-flash" %}
+{% else %}
+   {% set flash_class = "hide-flash" %}
+{% endif %}
+<div class="flash-error {{flash_class}}" id="flash_error">
       {% for err in flash %}
       <p>
          {{err}}
       </p>
       {% endfor %}
    </div>
-{% endif %}
 {% endblock %}

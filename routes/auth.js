@@ -20,7 +20,7 @@ var login = function(req, res, next) {
 // Constants for use with crypto.pbkdf2
 var HASH_ITERS = 2000;
 var HASH_LENGTH = 256;
-var SALT_LENGHT = 256;
+var SALT_LENGTH= 256;
 
 var auth = function(req, res, next) {
   var storedHash;
@@ -50,8 +50,7 @@ var auth = function(req, res, next) {
           // Copy to closure-captured storedHash variable so I can access it
           // futher down.
           storedHash = data.passhash;
-          crypto.pbkdf2(
-            req.body.password, data.salt, HASH_ITERS, HASH_LENGTH, callback);
+          getPassHash(req.body.password, data.salt, callback);
         }
       }],
 
@@ -76,6 +75,72 @@ var auth = function(req, res, next) {
 };
 
 
+var register = function(req, res, next) {
+  var errs = req.flash('error');
+  res.render('register', {flash: errs});
+};
+
+var getSalt = function() {
+  return crypto.randomBytes(SALT_LENGTH).toString('hex');
+};
+
+var getPassHash = function(pass, salt, cb) {
+  crypto.pbkdf2(pass, salt, HASH_ITERS, HASH_LENGTH, cb);
+};
+
+var onRegister = function(req, res, next) {
+  try {
+    var username = req.body.username.trim();
+    var pwd = req.body.password.trim();
+
+    var errors = false;
+    if (username.length === 0) {
+      req.flash('error', 'Username can not be blank');
+    }
+
+    if (pwd.length === 0) {
+      req.flash('error', 'Password can not be blank');
+    }
+
+    if (errors) {
+      res.redirect(verbs.routes('get', 'REGISTER'));
+    } else {
+      var salt = getSalt();
+      async.waterfall([
+          function(cb) {
+            getPassHash(pwd, salt, cb);
+          },
+
+          function(passHash, cb) {
+            db.registerUser({
+              $username: username,
+              $fullname: req.body.fullname.trim(),
+              $email: req.body.email.trim(),
+              $salt: salt,
+              $pass: passHash.toString('hex')}, cb);
+          }
+      ], function(err, dbResult) {
+        if (err) {
+          console.log('Errors adding new user to the database:');
+          console.dir(err);
+          if (err.errno === 19 && err.code === 'SQLITE_CONSTRAINT') {
+            req.flash('error', 'This username is already in use.');
+          } else {
+            req.flash('error', err.toString());
+          }
+          res.redirect(verbs.routes('get', 'REGISTER'));
+        } else {
+          res.redirect('/');
+        }
+      });
+    }
+  } catch (e) {
+    console.log('Caught error: %s', e);
+    req.flash('error', e.toString());
+    res.redirect(verbs.routes('get', 'REGISTER'));
+  }
+};
+
 exports.requireAuth = function(req, res, next) {
   if (isAuthenticated(req)) {
     next();
@@ -85,6 +150,8 @@ exports.requireAuth = function(req, res, next) {
 }
 
 exports.setup = function() {
-  verbs.get('LOGIN', '/login', login);
+  verbs.post('REGISTER', '/register', onRegister);
+  verbs.get('REGISTER', '/register', register);
   verbs.post('AUTH', '/auth', auth);
+  verbs.get('LOGIN', '/login', login);
 }
