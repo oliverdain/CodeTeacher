@@ -2,6 +2,13 @@
 
 {% block head %}
    {% parent %}
+   <style>
+      #register_link {
+         margin-top: 3em;
+         margin-left: 1em;
+         font-weight: bold;
+      }
+   </style>
 {% endblock %}
 
 {% block body %}
@@ -19,4 +26,8 @@
         <input type="submit" value="Log In"/>
     </div>
 </form>
+
+<div id="register_link">
+   Or <a href="{{routes.get.REGISTER}}">register</a> now.
+</div>
 {% endblock %}
