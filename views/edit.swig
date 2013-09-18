@@ -3,18 +3,18 @@
 {% block head %}
    {% parent %}
    <title>Editor</title>
-   <script src="javascript/third_party/jquery-1.9.1.min.js"></script>
+   <script src="/javascript/third_party/jquery-1.9.1.min.js"></script>
 
-   <script src="javascript/third_party/codemirror/codemirror.js"></script>
-   <script src="javascript/third_party/codemirror/mode/xml/xml.js"></script>
-   <script src="javascript/third_party/codemirror/mode/javascript/javascript.js"></script>
-   <script src="javascript/third_party/codemirror/mode/css/css.js"></script>
-   <script src="javascript/third_party/codemirror/mode/htmlmixed/htmlmixed.js"></script>
-   <link rel=stylesheet href="stylesheets/third_party/codemirror.css">
+   <script src="/javascript/third_party/codemirror/codemirror.js"></script>
+   <script src="/javascript/third_party/codemirror/mode/xml/xml.js"></script>
+   <script src="/javascript/third_party/codemirror/mode/javascript/javascript.js"></script>
+   <script src="/javascript/third_party/codemirror/mode/css/css.js"></script>
+   <script src="/javascript/third_party/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+   <link rel=stylesheet href="/stylesheets/third_party/codemirror.css">
 
-   <script src="javascript/third_party/jquery-ui-1.10.3.custom.min.js"></script>
-   <link rel=stylesheet href="stylesheets/third_party/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css">
-   <link rel=stylesheet href="stylesheets/edit.css">
+   <script src="/javascript/third_party/jquery-ui-1.10.3.custom.min.js"></script>
+   <link rel=stylesheet href="/stylesheets/third_party/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css">
+   <link rel=stylesheet href="/stylesheets/edit.css">
 {% endblock %}
 
 {%block body %}

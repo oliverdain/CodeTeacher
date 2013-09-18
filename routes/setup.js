@@ -11,9 +11,15 @@ var auth = require('./auth');
 /**
  * All routes get set up from here.
  */
-exports.setup = function() {
+exports.setup = function(app) {
   auth.setup();
-  verbs.get('EDITOR', '/edit', auth.requireAuth, handlers.editor);
-  verbs.get('HOME', '/', auth.requireAuth, handlers.home);
+
+  ////////
+  // All routes below this require autentication!
+  ///////
+  app.use(auth.requireAuth);
+  verbs.get('EDITOR', '/edit/', ':proj/:datetime?',
+      handlers.editor);
+  verbs.get('HOME', '/', handlers.home);
 };
 

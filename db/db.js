@@ -69,4 +69,22 @@ exports.registerUser = function(userdata, cb) {
       'values ($username, $fullname, $email, $salt, $pass)', userdata, cb);
 }
 
+exports.getNewProjectId = function(cb) {
+  var MAX_INT = 0xffffffff;
+  var num = Math.random() * MAX_INT;
+  var num = base32.encode(num);
+  db.get('select id from projects where id = ?', num, function(err, res) {
+    if (err) {
+      cb(err);
+    } else {
+      if (res === undefined) {
+        cb(null, num);
+      } else {
+        console.warn('Generated value already exists. Trying again.');
+        exports.getNewProjectId(cb);
+      }
+    }
+  });
+}
+
 setup();
