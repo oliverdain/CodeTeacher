@@ -14,10 +14,12 @@ var auth = require('./auth');
 exports.setup = function(app) {
   auth.setup();
 
-  ////////
+  app.get('*', auth.requireAuth);
+  app.post('*', auth.requireAuth);
+
+  ///////////////////////////////////////////////
   // All routes below this require autentication!
-  ///////
-  app.use(auth.requireAuth);
+  ///////////////////////////////////////////////
   verbs.get('EDITOR', '/edit/', ':proj/:datetime?',
       handlers.editor);
   verbs.get('HOME', '/', handlers.home);
