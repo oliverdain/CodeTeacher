@@ -1,4 +1,5 @@
 db = require('../db/db');
+verbs = require('./verbs');
 
 exports.editor = function(req, res) {
   res.render('edit', {});
@@ -10,12 +11,24 @@ exports.home = function(req, res) {
 
 
 exports.newProject = function(req, res, next) {
-  db.getNewProjectId(function(err, newId) {
-    if (err) {
-      next(err);
+  if (!req.body.proj_name) {
+    next(new Error('Project name is required'));
+  } else {
+    var projName = req.body.proj_name.trim();
+    if (projName.length === 0) {
+      next(new Error('Project name can not be empty.'));
     } else {
-      req.projectId = newId;
-      exports.editor(req, res);
+      // The callback on successful DB creation.
+      var onCreate = function(err) {
+        if (err) {
+          next(err);
+        } else {
+          res.redirect(
+              verbs.routes('get', 'EDITOR') + projName);
+        }
+      };
+      db.createNewProject(
+          req.session.user, projName, req.body.description, onCreate);
     }
-  });
+  }
 }

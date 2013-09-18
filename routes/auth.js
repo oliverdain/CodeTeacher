@@ -5,10 +5,8 @@ var async = require('async');
 
 var isAuthenticated = function(req) {
   if (req.session && req.session.user) {
-    console.log('Current user: %s', req.session.user);
     return true;
   } else {
-    console.log('No user set in the session.');
     return false;
   }
 }

@@ -14,7 +14,7 @@ var setup = function() {
     db.run(users_table);
 
     var projects_table = 'CREATE TABLE IF NOT EXISTS projects (' +
-      'id TEXT NOT NULL PRIMARY KEY, ' +
+      'id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
       'uname TEXT NOT NULL, ' +
       'name TEXT NOT NULL, ' +
       'description TEXT)';
@@ -24,8 +24,12 @@ var setup = function() {
       'project_uname ON projects (uname)';
     db.run(projects_uname_idx);
 
+    var projects_uname_idx = 'CREATE UNIQUE INDEX IF NOT EXISTS ' +
+      'project_user_name ON projects (uname, name)';
+    db.run(projects_uname_idx);
+
     var versions_table = 'CREATE TABLE IF NOT EXISTS versions (' +
-      'project_id TEXT NOT NULL, ' +
+      'project_id INTEGER NOT NULL, ' +
       'datetime TEXT NOT NULL, ' +
       'data TEXT NOT NULL, ' +
       'PRIMARY KEY(project_id, datetime))';
@@ -33,7 +37,7 @@ var setup = function() {
 
     var assignments_table = 'CREATE TABLE IF NOT EXISTS assignments (' +
         'id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-        'project_id TEXT NOT NULL, ' +
+        'project_id INTEGER NOT NULL, ' +
         'datetime TEXT NOT NULL, ' +
         'start_datetime TEXT NOT NULL, ' +
         'due_datetime TEXT NOT NULL, ' +
@@ -50,7 +54,7 @@ var setup = function() {
         // The project_id/version links to the versions table. datetime is NULL
         // if the user hasn't yet submitted their assignment. Once submitted,
         // datetime indicates which revision they're submitting.
-        'project_id TEXT NOT NULL, ' +
+        'project_id INTEGER NOT NULL, ' +
         'datetime TEXT, ' +
         'PRIMARY KEY (assignment_id, uname))';
     db.run(student_work_table);
@@ -69,22 +73,9 @@ exports.registerUser = function(userdata, cb) {
       'values ($username, $fullname, $email, $salt, $pass)', userdata, cb);
 }
 
-exports.getNewProjectId = function(cb) {
-  var MAX_INT = 0xffffffff;
-  var num = Math.random() * MAX_INT;
-  var num = base32.encode(num);
-  db.get('select id from projects where id = ?', num, function(err, res) {
-    if (err) {
-      cb(err);
-    } else {
-      if (res === undefined) {
-        cb(null, num);
-      } else {
-        console.warn('Generated value already exists. Trying again.');
-        exports.getNewProjectId(cb);
-      }
-    }
-  });
+exports.createNewProject = function(uname, projName, description, cb) {
+  db.run('insert into projects (uname, name, description) values (?, ?, ?)',
+      uname, projName, description, cb);
 }
 
 setup();
