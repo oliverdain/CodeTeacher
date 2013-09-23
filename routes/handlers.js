@@ -1,8 +1,8 @@
 db = require('../db/db');
 verbs = require('./verbs');
 
-exports.editor = function(req, res) {
-  res.render('edit', {});
+exports.review = function(req, res) {
+  res.render('review', {});
 };
 
 exports.home = function(req, res) {

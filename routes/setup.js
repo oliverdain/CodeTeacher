@@ -20,8 +20,7 @@ exports.setup = function(app) {
   ///////////////////////////////////////////////
   // All routes below this require autentication!
   ///////////////////////////////////////////////
-  verbs.get('EDITOR', '/edit/', ':projName',
-      handlers.editor);
+  verbs.get('REVIEW', '/review', handlers.review);
   verbs.get('HOME', '/', handlers.home);
   verbs.post('NEW_PROJ', '/newProj', handlers.newProject);
 };
