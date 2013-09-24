@@ -69,7 +69,7 @@ CodeReview.prototype.onLineClick = function(lineNum) {
   this.codeBlocks[idx].$codeElem.replaceWith($replaceCodeElem);
   this.codeBlocks[idx].$codeElem = $replaceCodeElem;
 
-  var $comment = $('<p>Hello World!</p>');
+  var $comment = this.getCommentForm(lineNum);
 
   this.codeBlocks[idx].$codeElem.after($comment);
   this.codeBlocks[idx].$comment = $comment;
@@ -90,6 +90,22 @@ CodeReview.prototype.onLineClick = function(lineNum) {
     this.codeBlocks.push(newBlock);
     this.codeBlocks.sort(function(a, b) { return a.startLine - b.startLine; });
   }
+};
+
+// Returns the controls for adding comments to the given line.
+CodeReview.prototype.getCommentForm = function(lineNum) {
+  var $wrapper = $('<div/>', {class: 'comment-wrapper'});
+  var $textarea = $('<textarea/>', {rows: 10, cols: 80});
+  var $save = $('<button/>').text('Save');
+  $save.click(function(event) {
+    console.log('Saving comment data for line %s. Comment is:\n%s',
+      lineNum, $textarea.val());
+  });
+  var $cancel = $('<button/>').text('Cancel');
+  var $btnWrapper = $('<div/>', {class: 'comment-buttons'});
+  $btnWrapper.append($save, $cancel);
+  $wrapper.append($textarea, $btnWrapper);
+  return $wrapper;
 };
 
 
