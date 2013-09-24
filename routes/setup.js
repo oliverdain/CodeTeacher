@@ -22,5 +22,6 @@ exports.setup = function(app) {
   ///////////////////////////////////////////////
   verbs.get('REVIEW', '/review', handlers.review);
   verbs.get('HOME', '/', handlers.home);
+  verbs.post('SUBMIT_ASSIGN', '/submit_assignment', handlers.submitAssignment);
 };
 

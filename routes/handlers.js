@@ -37,3 +37,37 @@ exports.home = function(req, res) {
       });
 };
 
+exports.submitAssignment = function(req, res, next) {
+  var inputErrorMsg = null;
+  if (!req.body.url) {
+    inputErrorMsg = 'Can not submit an assignment without a URL';
+  }
+  var url = req.body.url.trim();
+  if (url.length === 0) {
+    inputErrorMsg = 'Can not submit an assignment without a URL';
+  }
+  var urlRegex = /^https?:\/\//;
+  if (!urlRegex.test(url)) {
+    inputErrorMsg = url + ' does not start with "http" as expected';
+  }
+
+  if (!req.body.assign_id) {
+    inputErrorMsg = 'Can not submit an assignment without an id';
+  }
+  var assignId = parseInt(req.body.assign_id);
+  if (! _.isNumber(assignId) || _.isNaN(assignId)) {
+    inputErrorMsg = 'Invalid assignment id: ' + assignId;
+  }
+  
+  if (inputErrorMsg !== null) {
+    next(new Error(inputErrorMsg));
+  } else {
+    db.submitAssignment(req.session.user, assignId, url, function(err, result) {
+      if (err) {
+        next(err);
+      } else {
+        res.redirect(verbs.routes('get', 'HOME'));
+      }
+    });
+  }
+};

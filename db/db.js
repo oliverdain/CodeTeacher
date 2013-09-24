@@ -68,4 +68,10 @@ exports.getFullName = function(uname, cb) {
   db.get('select fullname from users where uname = ?', uname, cb);
 };
 
+exports.submitAssignment = function(uname, assign_id, url, cb) {
+  db.run('insert into student_work ' +
+      '(uname, assignment_id, submitted_url, submitted_datetime) VALUES ' +
+      "(?, ?, ?, datetime('now', 'localtime'))", uname, assign_id, url, cb);
+};
+
 setup();

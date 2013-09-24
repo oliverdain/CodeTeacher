@@ -3,6 +3,12 @@
 {% block head %}
    {% parent %}
    <title>Home Page</title>
+   
+   <script src="/javascript/third_party/jquery-1.9.1.min.js"></script>
+   <script src="/javascript/third_party/jquery-ui-1.10.3.custom.min.js"></script>
+   <script src="/javascript/home.js"></script>
+
+   <link rel=stylesheet href="/stylesheets/third_party/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css">
    <link rel=stylesheet href="/stylesheets/home.css">
 {% endblock %}
 
@@ -38,9 +44,15 @@
             {{ assign.due_datetime|date('m/d/Y') }}
          </td>
          <td>
-            <button data-assign="{{ assign.id }}" class="submit-assign">
+            <button onclick="showDialog('dialog-{{ assign.id }}')">
                Submit Assignment
             </button>
+            <div class="dialog" id="dialog-{{ assign.id }}">
+               <form method="post" action="{{ routes.post.SUBMIT_ASSIGN }}">
+                  <input type="hidden" value="{{ assign.id }}" name="assign_id">
+                  URL: <input type="text" name="url">
+               </form>
+            </div>
          </td>
       </tr>
       {% endfor %}
@@ -72,7 +84,7 @@ None.
             </a>
          </td>
          <td>
-            {{ assign.submitted_datetime|date('m/d/Y') }}
+            {{ assign.submitted_datetime }}
          </td>
       </tr>
       {% endfor %}
