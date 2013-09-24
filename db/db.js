@@ -13,69 +13,59 @@ var setup = function() {
       'passhash TEXT NOT NULL)';
     db.run(users_table);
 
-    var projects_table = 'CREATE TABLE IF NOT EXISTS projects (' +
-      'id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-      'uname TEXT NOT NULL, ' +
-      'name TEXT NOT NULL, ' +
-      'description TEXT)';
-    db.run(projects_table);
-
-    var projects_uname_idx = 'CREATE INDEX IF NOT EXISTS ' +
-      'project_uname ON projects (uname)';
-    db.run(projects_uname_idx);
-
-    var projects_uname_idx = 'CREATE UNIQUE INDEX IF NOT EXISTS ' +
-      'project_user_name ON projects (uname, name)';
-    db.run(projects_uname_idx);
-
-    var versions_table = 'CREATE TABLE IF NOT EXISTS versions (' +
-      'project_id INTEGER NOT NULL, ' +
-      'datetime TEXT NOT NULL, ' +
-      'data TEXT NOT NULL, ' +
-      'PRIMARY KEY(project_id, datetime))';
-    db.run(versions_table);
-
     var assignments_table = 'CREATE TABLE IF NOT EXISTS assignments (' +
         'id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' +
-        'project_id INTEGER NOT NULL, ' +
-        'datetime TEXT NOT NULL, ' +
-        'start_datetime TEXT NOT NULL, ' +
-        'due_datetime TEXT NOT NULL, ' +
-        'name TEXT NOT NULL)';
+        'name TEXT NOT NULL, ' +
+        'template_url TEXT NOT NULL, ' +
+        'due_datetime TEXT NOT NULL)';
     db.run(assignments_table);
-
-    var assignments_index = 'CREATE INDEX IF NOT EXISTS ' +
-      'assignments_project ON assignments (project_id, datetime)';
-    db.run(assignments_index);
 
     var student_work_table = 'CREATE TABLE IF NOT EXISTS student_work (' +
         'assignment_id INTEGER NOT NULL, ' +
         'uname TEXT NOT NULL, ' +
-        // The project_id/version links to the versions table. datetime is NULL
-        // if the user hasn't yet submitted their assignment. Once submitted,
-        // datetime indicates which revision they're submitting.
-        'project_id INTEGER NOT NULL, ' +
-        'datetime TEXT, ' +
+        'submitted_url TEXT, ' +
+        'submitted_datetime TEXT, ' +
         'PRIMARY KEY (assignment_id, uname))';
     db.run(student_work_table);
 
+    var grades = 'CREATE TABLE IF NOT EXISTS grades (' +
+        'uname TEXT NOT NULL, ' +
+        'assignment_id INTEGER NOT NULL, ' +
+        'datetime TEXT NOT NULL, ' +
+        'PRIMARY KEY(uname, assignment_id))';
+    db.run(grades);
   });
 };
 
 exports.getUserData = function(uname, cb) {
   db.get('select * from users where uname = ?', uname, cb);
-}
+};
 
 exports.registerUser = function(userdata, cb) {
-  console.log('registerUser called with:');
-  console.dir(userdata);
   db.run('insert into users (uname, fullname, email, salt, passhash) ' +
       'values ($username, $fullname, $email, $salt, $pass)', userdata, cb);
-}
+};
 
-exports.createNewProject = function(uname, projName, description, cb) {
-  db.run('insert into projects (uname, name, description) values (?, ?, ?)',
-      uname, projName, description, cb);
-}
+exports.getAssignmentsNotSubmitted = function(uname, cb) {
+  db.all('select id, name, template_url, due_datetime from ' +
+      'assignments a left join student_work w on ' +
+      '(a.id = w.assignment_id and w.uname = ?) where ' +
+      'w.assignment_id is null', uname, cb);
+};
+
+exports.getUngradedAssignments = function(uname, cb) {
+  db.all('select a.name, submitted_url, submitted_datetime from ' +
+      'student_work w, assignments a where a.id = w.assignment_id and ' +
+     'uname = ?', uname, cb);
+};
+
+exports.getGradedAssignments = function(uname, cb) {
+  db.all('select a.name, uname from grades g, assignments a where ' +
+      'g.assignment_id = a.id and g.uname = ?', uname, cb);
+};
+
+exports.getFullName = function(uname, cb) {
+  db.get('select fullname from users where uname = ?', uname, cb);
+};
 
 setup();

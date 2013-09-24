@@ -1,34 +1,39 @@
-db = require('../db/db');
-verbs = require('./verbs');
+var db = require('../db/db');
+var verbs = require('./verbs');
+var async = require('async');
+var _ = require('underscore');
 
 exports.review = function(req, res) {
   res.render('review', {});
 };
 
 exports.home = function(req, res) {
-  res.render('home', {});
+  console.assert(req.session !== null);
+  console.assert(req.session.user !== null);
+
+  async.parallel([
+      _.bind(db.getAssignmentsNotSubmitted, db, req.session.user),
+      _.bind(db.getUngradedAssignments, db, req.session.user),
+      _.bind(db.getGradedAssignments, db, req.session.user),
+      _.bind(db.getFullName, db, req.session.user)
+      ],
+
+      function(err, allResults) {
+        if (err) {
+          console.error('Error: %s', err);
+          console.dir(err);
+          res.send('Error: ' + err);
+        } else {
+          console.assert(allResults.length === 4);
+
+          var renderData = {
+            notstarted: allResults[0],
+            submitted: allResults[1],
+            graded: allResults[2],
+            fullname: allResults[3].fullname
+          };
+          res.render('home', renderData);
+        }
+      });
 };
 
-
-exports.newProject = function(req, res, next) {
-  if (!req.body.proj_name) {
-    next(new Error('Project name is required'));
-  } else {
-    var projName = req.body.proj_name.trim();
-    if (projName.length === 0) {
-      next(new Error('Project name can not be empty.'));
-    } else {
-      // The callback on successful DB creation.
-      var onCreate = function(err) {
-        if (err) {
-          next(err);
-        } else {
-          res.redirect(
-              verbs.routes('get', 'EDITOR') + projName);
-        }
-      };
-      db.createNewProject(
-          req.session.user, projName, req.body.description, onCreate);
-    }
-  }
-}

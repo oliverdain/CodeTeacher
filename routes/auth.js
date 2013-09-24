@@ -43,8 +43,6 @@ var auth = function(req, res, next) {
         if (data === undefined) {
           callback(new Error('Username not found'));
         } else  {
-          console.log('Data is: %s', data);
-          console.dir(data);
           // Copy to closure-captured storedHash variable so I can access it
           // futher down.
           storedHash = data.passhash;
