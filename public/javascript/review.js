@@ -37,7 +37,7 @@ CodeReview.prototype.createCodeElem = function(startLine, endLine) {
 CodeReview.prototype.createCodeBlock = function(startLine, endLine) {
   var block = {
     startLine: startLine,
-    $comment: null,
+    comment: null,
     $codeElem: this.createCodeElem(startLine, endLine)
   };
 
@@ -69,10 +69,10 @@ CodeReview.prototype.onLineClick = function(lineNum) {
   this.codeBlocks[idx].$codeElem.replaceWith($replaceCodeElem);
   this.codeBlocks[idx].$codeElem = $replaceCodeElem;
 
-  var $comment = this.getCommentForm(lineNum);
+  var comment = this.getCommentObject(lineNum);
 
-  this.codeBlocks[idx].$codeElem.after($comment);
-  this.codeBlocks[idx].$comment = $comment;
+  this.codeBlocks[idx].$codeElem.after(comment.$elems);
+  this.codeBlocks[idx].comment = comment;
 
   if (lineNum + 1 >= this.syntaxLines.length) {
     // They clicked the last line, so done.
@@ -85,7 +85,7 @@ CodeReview.prototype.onLineClick = function(lineNum) {
     }
 
     var newBlock = this.createCodeBlock(lineNum + 1, endLine);
-    this.codeBlocks[idx].$comment.after(newBlock.$codeElem);
+    this.codeBlocks[idx].comment.$elems.after(newBlock.$codeElem);
 
     this.codeBlocks.push(newBlock);
     this.codeBlocks.sort(function(a, b) { return a.startLine - b.startLine; });
@@ -93,20 +93,60 @@ CodeReview.prototype.onLineClick = function(lineNum) {
 };
 
 // Returns the controls for adding comments to the given line.
-CodeReview.prototype.getCommentForm = function(lineNum) {
+CodeReview.prototype.getCommentObject = function(lineNum) {
+  var commentObj = {
+    value: ''
+  };
+
   var $wrapper = $('<div/>', {class: 'comment-wrapper'});
   var $textarea = $('<textarea/>', {rows: 10, cols: 80});
-  var $save = $('<button/>').text('Save');
+  var $save = $('<button/>', {disabled: true}).text('Save');
+  var $cancel = $('<button/>', {disabled: true}).text('Cancel');
+
   $save.click(function(event) {
-    console.log('Saving comment data for line %s. Comment is:\n%s',
-      lineNum, $textarea.val());
+    commentObj.value = $textarea.val();
+    $save.attr('disabled', true);
+    $cancel.attr('disabled', true);
   });
-  var $cancel = $('<button/>').text('Cancel');
+
+  $cancel.click(function(event) {
+    $textarea.val(commentObj.value);
+    $cancel.attr('disabled', true);
+    $save.attr('disabled', true);
+  });
+
+  var onModify = function(event) {
+    $save.attr('disabled', false);
+    $cancel.attr('disabled', false);
+  };
+
+  $textarea.change(onModify);
+  $textarea.keyup(onModify);
+
   var $btnWrapper = $('<div/>', {class: 'comment-buttons'});
   $btnWrapper.append($save, $cancel);
   $wrapper.append($textarea, $btnWrapper);
-  return $wrapper;
+  
+  commentObj.$elems = $wrapper;
+
+  return commentObj;
 };
+
+// Returns an array of Objects suitable for serializing to JSON. These objects
+// are sufficient to reconstruct the review.
+CodeReview.prototype.getReviewData = function() {
+  var result = [];
+  for (var i = 0; i < this.codeBlocks.length; ++i) {
+    var curBlk = this.codeBlocks[i];
+    var d = {startLine: curBlk.startLine};
+    if (curBlk.$comment !== null && curBlck.comment.value.length > 0) {
+      d.comment = curBlk.comment.value;
+    }
+    result.push(d);
+  }
+
+  return result;
+}
 
 
 $(document).ready(function() {
