@@ -7,9 +7,14 @@ exports.review = function(req, res) {
   res.render('review', {});
 };
 
-exports.home = function(req, res) {
+exports.home = function(req, res, next) {
   console.assert(req.session !== null);
   console.assert(req.session.user !== null);
+
+  if (req.session.role === 'teacher') {
+    getTeacherHome(req, res, next);
+    return;
+  } 
 
   async.parallel([
       _.bind(db.getAssignmentsNotSubmitted, db, req.session.user),
@@ -35,6 +40,16 @@ exports.home = function(req, res) {
           res.render('home', renderData);
         }
       });
+};
+
+var getTeacherHome = function(req, res, next) {
+  db.getAssignmentsThatNeedGrading(function(err, result) {
+    if (err) {
+      next(err);
+    } else {
+      res.render('teacher_home', {needGrading: result});
+    }
+  });
 };
 
 exports.submitAssignment = function(req, res, next) {
