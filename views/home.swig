@@ -114,6 +114,10 @@ None.
       <li><a href="http://reference.sitepoint.com/css">Sitepoint</a></li>
       <li><a href="http://htmldog.com/reference/cssproperties/">HTMLDog</a></li>
    </ul>
+
+   <div id="logout-block">
+      <a href="{{ routes.get.LOGOUT }}">Log Off</a>
+   </div>
 </div>
 
 {% endblock %}

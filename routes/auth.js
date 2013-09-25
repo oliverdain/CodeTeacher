@@ -15,6 +15,11 @@ var login = function(req, res, next) {
   res.render('login', {flash: req.flash('error')});
 }
 
+var logout = function(req, res, next) {
+  req.session = {};
+  res.redirect(verbs.routes('get', 'LOGIN'));
+}
+
 // Constants for use with crypto.pbkdf2
 var HASH_ITERS = 2000;
 var HASH_LENGTH = 256;
@@ -22,6 +27,7 @@ var SALT_LENGTH= 256;
 
 var auth = function(req, res, next) {
   var storedHash;
+  var role;
 
   async.waterfall([
       // For the life of me, I can't figure out why this is necessary!  This is
@@ -46,6 +52,7 @@ var auth = function(req, res, next) {
           // Copy to closure-captured storedHash variable so I can access it
           // futher down.
           storedHash = data.passhash;
+          role = data.role;
           getPassHash(req.body.password, data.salt, callback);
         }
       }],
@@ -60,6 +67,7 @@ var auth = function(req, res, next) {
           if (computedHash === storedHash) {
             console.info('User password is correct. Authenticated.');
             req.session.user = req.body.username;
+            req.session.role = role;
             res.redirect(verbs.routes('get', 'HOME'));
           } else {
             console.info('Bad password for %s', req.body.username);
@@ -150,4 +158,5 @@ exports.setup = function() {
   verbs.get('REGISTER', '/register', register);
   verbs.post('AUTH', '/auth', auth);
   verbs.get('LOGIN', '/login', login);
+  verbs.get('LOGOUT', '/logout', logout);
 }

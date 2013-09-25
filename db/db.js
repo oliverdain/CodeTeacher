@@ -9,6 +9,7 @@ var setup = function() {
       'uname TEXT NOT NULL PRIMARY KEY, ' + 
       'fullname TEXT, ' +
       'email TEXT, ' +
+      'role TEXT NOT NULL, ' +
       'salt TEXT, ' +
       'passhash TEXT NOT NULL)';
     db.run(users_table);
