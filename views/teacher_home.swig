@@ -25,6 +25,12 @@
             Student Name
          </td>
          <td>
+            Assignment
+         </td>
+         <td>
+            Assignment Due Date
+         </td>
+         <td>
             Submitted Date and Time
          </td>
          <td>
@@ -37,6 +43,12 @@
       <tr>
          <td>
             {{ assign.fullname }}
+         </td>
+         <td>
+            {{ assign.name }}
+         </td>
+         <td>
+            {{ assign.due_datetime }}
          </td>
          <td>
             {{ assign.submitted_datetime }}
