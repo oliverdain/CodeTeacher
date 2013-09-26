@@ -9,7 +9,7 @@ var setup = function() {
       'uname TEXT NOT NULL PRIMARY KEY, ' + 
       'fullname TEXT, ' +
       'email TEXT, ' +
-      'role TEXT NOT NULL, ' +
+      'role TEXT NOT NULL DEFAULT \'student\', ' +
       'salt TEXT, ' +
       'passhash TEXT NOT NULL)';
     db.run(users_table);
@@ -42,9 +42,19 @@ exports.getUserData = function(uname, cb) {
   db.get('select * from users where uname = ?', uname, cb);
 };
 
+exports.getAllUsers = function(cb) {
+  db.all('select * from users', cb);
+};
+
+
 exports.registerUser = function(userdata, cb) {
   db.run('insert into users (uname, fullname, email, salt, passhash) ' +
       'values ($username, $fullname, $email, $salt, $pass)', userdata, cb);
+};
+
+exports.setNewPassHash = function(uname, salt, hash, cb) {
+  db.run('update users set salt = ?, passhash = ? where uname = ?',
+      salt, hash, uname, cb);
 };
 
 exports.getAssignmentsNotSubmitted = function(uname, cb) {

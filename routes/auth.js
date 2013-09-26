@@ -78,6 +78,38 @@ var auth = function(req, res, next) {
       });
 };
 
+// This may be poorly named. It just sets the submitted user's password to the
+// given value. Note that we first ensure that the user is logged in and is a
+// teacher.
+var passReset = function(req, res, next) {
+  console.log('passReset called with: %s', req.body);
+  var salt;
+  async.waterfall([
+      function(cb) {
+        requireAuth(req, res, cb);
+      },
+      function(cb) {
+        if (req.session.role != 'teacher') {
+          cb('Error! You are NOT the teacher!');
+        } else {
+          salt = getSalt();
+          getPassHash(req.body.newPass, salt, cb);
+        }
+      },
+      function(passHash, cb) {
+          db.setNewPassHash(req.body.uname, salt,
+            passHash.toString('hex'), cb);
+      }
+      ],
+
+      function(err, result) {
+        if (err) {
+          res.send('Error: ', err);
+        } else {
+          res.send('SUCCESS');
+        }
+      });
+};
 
 var register = function(req, res, next) {
   var errs = req.flash('error');
@@ -145,13 +177,15 @@ var onRegister = function(req, res, next) {
   }
 };
 
-exports.requireAuth = function(req, res, next) {
+var requireAuth = function(req, res, next) {
   if (isAuthenticated(req)) {
     next();
   } else {
     res.redirect(verbs.routes('get', 'LOGIN'));
   }
-}
+};
+
+exports.requireAuth = requireAuth;
 
 exports.setup = function() {
   verbs.post('REGISTER', '/register', onRegister);
@@ -159,4 +193,5 @@ exports.setup = function() {
   verbs.post('AUTH', '/auth', auth);
   verbs.get('LOGIN', '/login', login);
   verbs.get('LOGOUT', '/logout', logout);
+  verbs.post('PASS_RESET', '/pass_reset', passReset);
 }

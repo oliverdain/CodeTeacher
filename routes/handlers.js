@@ -43,13 +43,23 @@ exports.home = function(req, res, next) {
 };
 
 var getTeacherHome = function(req, res, next) {
-  db.getAssignmentsThatNeedGrading(function(err, result) {
-    if (err) {
-      next(err);
-    } else {
-      res.render('teacher_home', {needGrading: result});
-    }
-  });
+  async.parallel([
+      db.getAssignmentsThatNeedGrading,
+      db.getAllUsers
+    ],
+
+    function(err, results) {
+      console.assert(results.length === 2);
+
+      if (err) {
+        next(err);
+      } else {
+        res.render('teacher_home', {
+          needGrading: results[0],
+          allUsers: results[1]
+        });
+      }
+    });
 };
 
 exports.submitAssignment = function(req, res, next) {
