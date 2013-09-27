@@ -73,6 +73,9 @@ None.
          <td>
             Submitted Date
          </td>
+         <td>
+            Action
+         </td>
       </tr>
    </thead>
    <tbody>
@@ -85,6 +88,17 @@ None.
          </td>
          <td>
             {{ assign.submitted_datetime }}
+         </td>
+         <td>
+            <button onclick="showDialog('resubmit-dialog-{{ assign.id }}')">
+               Change Submitted URL
+            </button>
+            <div class="dialog" id="resubmit-dialog-{{ assign.id }}">
+               <form method="post" action="{{ routes.post.RESUBMIT_ASSIGN }}">
+                  <input type="hidden" value="{{ assign.id }}" name="assign_id">
+                  URL: <input type="text" name="url">
+               </form>
+            </div>
          </td>
       </tr>
       {% endfor %}

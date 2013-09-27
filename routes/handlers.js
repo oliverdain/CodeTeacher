@@ -62,12 +62,12 @@ var getTeacherHome = function(req, res, next) {
     });
 };
 
-exports.submitAssignment = function(req, res, next) {
+var validateSubmittedURL = function(url) {
   var inputErrorMsg = null;
-  if (!req.body.url) {
+  if (!url) {
     inputErrorMsg = 'Can not submit an assignment without a URL';
   }
-  var url = req.body.url.trim();
+  url = url.trim();
   if (url.length === 0) {
     inputErrorMsg = 'Can not submit an assignment without a URL';
   }
@@ -75,6 +75,14 @@ exports.submitAssignment = function(req, res, next) {
   if (!urlRegex.test(url)) {
     inputErrorMsg = url + ' does not start with "http" as expected';
   }
+
+  return {url: url, err: inputErrorMsg};
+};
+
+exports.submitAssignment = function(req, res, next) {
+  var urlRes = validateSubmittedURL(req.body.url);
+  var inputErrorMsg = urlRes.err;
+  var url = urlRes.url;
 
   if (!req.body.assign_id) {
     inputErrorMsg = 'Can not submit an assignment without an id';
@@ -88,6 +96,32 @@ exports.submitAssignment = function(req, res, next) {
     next(new Error(inputErrorMsg));
   } else {
     db.submitAssignment(req.session.user, assignId, url, function(err, result) {
+      if (err) {
+        next(err);
+      } else {
+        res.redirect(verbs.routes('get', 'HOME'));
+      }
+    });
+  }
+};
+
+exports.changeAssignmentURL = function(req, res, next) {
+  var urlRes = validateSubmittedURL(req.body.url);
+  var inputErrorMsg = urlRes.err;
+  var url = urlRes.url;
+
+  if (!req.body.assign_id) {
+    inputErrorMsg = 'Can not submit an assignment without an id';
+  }
+  var assignId = parseInt(req.body.assign_id);
+  if (! _.isNumber(assignId) || _.isNaN(assignId)) {
+    inputErrorMsg = 'Invalid assignment id: ' + assignId;
+  }
+  
+  if (inputErrorMsg !== null) {
+    next(new Error(inputErrorMsg));
+  } else {
+    db.changeAssignmentURL(assignId, req.session.user, url, function(err, result) {
       if (err) {
         next(err);
       } else {

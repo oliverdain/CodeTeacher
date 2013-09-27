@@ -65,7 +65,7 @@ exports.getAssignmentsNotSubmitted = function(uname, cb) {
 };
 
 exports.getUngradedAssignments = function(uname, cb) {
-  db.all('select a.name, submitted_url, submitted_datetime from ' +
+  db.all('select a.name, a.id, submitted_url, submitted_datetime from ' +
       'student_work w, assignments a where a.id = w.assignment_id and ' +
      'uname = ?', uname, cb);
 };
@@ -83,6 +83,12 @@ exports.submitAssignment = function(uname, assign_id, url, cb) {
   db.run('insert into student_work ' +
       '(uname, assignment_id, submitted_url, submitted_datetime) VALUES ' +
       "(?, ?, ?, datetime('now', 'localtime'))", uname, assign_id, url, cb);
+};
+
+exports.changeAssignmentURL = function(assign_id, uname, url, cb) {
+  db.run('update student_work set submitted_url = ?, ' +
+      'submitted_datetime = datetime(\'now\', \'localtime\') where ' +
+      'assignment_id = ? and uname = ?', url, assign_id, uname, cb);
 };
 
 exports.getAssignmentsThatNeedGrading = function(cb) {
