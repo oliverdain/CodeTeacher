@@ -157,5 +157,5 @@ exports.addCodeToReview = function(req, res, next) {
 };
 
 exports.fileReview = function(req, res) {
-  res.render('review', {});
+  res.render('file_review', {});
 };

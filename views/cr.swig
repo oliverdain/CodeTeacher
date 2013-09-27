@@ -22,6 +22,9 @@
          <td>
             File Name
          </td>
+         <td>
+            Action
+         </td>
       </tr>
    </thead>
    <tbody id="cr_files">
@@ -42,10 +45,18 @@
 
 var onCodeSubmit = function(res) {
    console.assert(res === 'SUCCESS');
+   var fname = $('#fname').val();
    var $row = $('<tr/>');
-   var $col = $('<td/>');
-   $col.append($('#fname').val());
-   $row.html($col);
+   var $colFile = $('<td/>');
+   $colFile.append(fname);
+   $row.html($colFile);
+
+   var $colAction = $('<a/>', {
+      href: '{{ routes.get.FILE_REVIEW }}{{ student.uname }}/' + fname
+   });
+   $colAction.append('Review');
+   $row.append($colAction);
+
    $('#cr_files').append($row);
    $('#code').val('');
    $('#fname').val('');

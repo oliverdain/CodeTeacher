@@ -54,7 +54,7 @@
             {{ assign.submitted_datetime }}
          </td>
          <td>
-            <a href="{{ routes.get.CODE_REVIEW }}/{{ assign.uname }}/{{ assign.assignment_id }}">
+            <a href="{{ routes.get.CODE_REVIEW }}{{ assign.uname }}/{{ assign.assignment_id }}">
                Grade Assignment
             </a>
          </td>
