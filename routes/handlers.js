@@ -130,3 +130,13 @@ exports.changeAssignmentURL = function(req, res, next) {
     });
   }
 };
+
+exports.createCR = function(req, res, next) {
+  res.render('create_cr', req.body);
+}
+
+exports.addCodeToReview = function(req, res, next) {
+  console.log('User sent the following to add to a review:');
+  console.dir(req.body);
+  res.send('SUCCESS');
+};

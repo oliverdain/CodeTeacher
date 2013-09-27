@@ -33,8 +33,18 @@ var setup = function() {
         'uname TEXT NOT NULL, ' +
         'assignment_id INTEGER NOT NULL, ' +
         'datetime TEXT NOT NULL, ' +
+        'grade INTEGER NOT NULL, ' +
         'PRIMARY KEY(uname, assignment_id))';
     db.run(grades);
+
+    var reviews = 'CREATE TABLE IF NOT EXISTS code_reviews (' +
+        'uname TEXT NOT NULL, ' +
+        'assignment_id INTEGER NOT NULL, ' +
+        'file_name TEXT NOT NULL, ' +
+        'code TEXT NOT NULL, ' +
+        'comment_blocks TEXT, ' +
+        'PRIMARY KEY(uname, assignment_id, file_name))';
+    db.run(reviews);
   });
 };
 
@@ -92,7 +102,9 @@ exports.changeAssignmentURL = function(assign_id, uname, url, cb) {
 };
 
 exports.getAssignmentsThatNeedGrading = function(cb) {
-  db.all('select * from (student_work sw join users u on (u.uname = sw.uname)) ' +
+  db.all('select sw.assignment_id, sw.uname, sw.submitted_url, ' +
+      'sw.submitted_datetime, a.name, u.fullname, a.due_datetime ' +
+      'from (student_work sw join users u on (u.uname = sw.uname)) ' +
         'left join grades g on (g.assignment_id = sw.assignment_id) ' +
         'join assignments a on (a.id = sw.assignment_id) ' +
       'where submitted_datetime is not null and g.assignment_id is null', cb);

@@ -25,5 +25,7 @@ exports.setup = function(app) {
   verbs.post('SUBMIT_ASSIGN', '/submit_assignment', handlers.submitAssignment);
   verbs.post('RESUBMIT_ASSIGN', '/resubmit_assignment',
       handlers.changeAssignmentURL);
+  verbs.post('CREATE_CR', '/create_cr', handlers.createCR);
+  verbs.post('ADD_CODE_TO_REVIEW', '/add_to_review', handlers.addCodeToReview);
 };
 
