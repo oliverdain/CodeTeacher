@@ -67,6 +67,10 @@ exports.setNewPassHash = function(uname, salt, hash, cb) {
       salt, hash, uname, cb);
 };
 
+exports.getAssignmentData = function(assign_id, cb) {
+  db.get('select * from assignments where id = ?', assign_id, cb);
+};
+
 exports.getAssignmentsNotSubmitted = function(uname, cb) {
   db.all('select id, name, template_url, due_datetime from ' +
       'assignments a left join student_work w on ' +

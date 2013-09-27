@@ -3,10 +3,6 @@ var verbs = require('./verbs');
 var async = require('async');
 var _ = require('underscore');
 
-exports.review = function(req, res) {
-  res.render('review', {});
-};
-
 exports.home = function(req, res, next) {
   console.assert(req.session !== null);
   console.assert(req.session.user !== null);
@@ -131,8 +127,22 @@ exports.changeAssignmentURL = function(req, res, next) {
   }
 };
 
-exports.createCR = function(req, res, next) {
-  res.render('create_cr', req.body);
+exports.cr = function(req, res, next) {
+  async.parallel([
+      _.partial(db.getUserData, req.params.uname),
+      _.partial(db.getAssignmentData, req.params.assign_id)],
+
+  function(err, results) {
+    if (err) {
+      next(err);
+      return;
+    }
+    
+    res.render('cr', {
+      student: results[0],
+      assign: results[1]
+    });
+  });
 }
 
 exports.addCodeToReview = function(req, res, next) {
@@ -144,4 +154,8 @@ exports.addCodeToReview = function(req, res, next) {
       res.send('SUCCESS');
     }
   });
+};
+
+exports.fileReview = function(req, res) {
+  res.render('review', {});
 };

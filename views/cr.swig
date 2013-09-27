@@ -2,17 +2,17 @@
 
 {% block head %}
    {% parent %}
-   <script src="javascript/third_party/jquery-1.9.1.min.js"></script>
+   <script src="/javascript/third_party/jquery-1.9.1.min.js"></script>
 {% endblock %}
 
 {% block body %}
 {% parent %}
 <h1>Create Code Review</h1>
 <p>
-   Assignment: {{ assign_name }}
+   Assignment: {{ assign.name }}
 </p>
 <p>
-   Student: {{ uname }}
+   Student: {{ student.fullname }}
 </p>
 
 <h2>Files in Review</h2>
@@ -58,8 +58,8 @@ var onCodeSubmitFail = function(err) {
 var addCode = function() {
    $.post('{{ routes.post.ADD_CODE_TO_REVIEW }}',
          {
-            assign_id: {{ assign_id }},
-            uname: '{{ uname }}',
+            assign_id: {{ assign.id }},
+            uname: '{{ student.uname }}',
             code: $('#code').val(),
             fname: $('#fname').val()
          }, onCodeSubmit).fail(onCodeSubmitFail);

@@ -54,12 +54,9 @@
             {{ assign.submitted_datetime }}
          </td>
          <td>
-            <form action="{{ routes.post.CREATE_CR }}" method="POST">
-               <input type="hidden" value="{{ assign.uname }}" name="uname">
-               <input type="hidden" value="{{ assign.assignment_id }}" name="assign_id">
-               <input type="hidden" value="{{ assign.name }}" name="assign_name">
-               <input type="submit" value="Grade Assignment">
-            </form>
+            <a href="{{ routes.get.CODE_REVIEW }}/{{ assign.uname }}/{{ assign.assignment_id }}">
+               Grade Assignment
+            </a>
          </td>
       </tr>
       {% endfor %}
