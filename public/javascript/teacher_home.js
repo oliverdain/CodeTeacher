@@ -19,6 +19,7 @@ var resetPassword = function(uname) {
   $dialogDiv.append('New Password: ');
   $dialogDiv.append($newPass);
   $dialogDiv.dialog({
+    modal: true,
     buttons: [
       {
         text: "Submit",
