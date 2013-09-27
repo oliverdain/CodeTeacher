@@ -136,7 +136,12 @@ exports.createCR = function(req, res, next) {
 }
 
 exports.addCodeToReview = function(req, res, next) {
-  console.log('User sent the following to add to a review:');
-  console.dir(req.body);
-  res.send('SUCCESS');
+  var b = req.body;
+  db.addFileToCodeReview(b.uname, b.assign_id, b.fname, b.code, function(err) {
+    if (err) {
+      next(err);
+    } else {
+      res.send('SUCCESS');
+    }
+  });
 };

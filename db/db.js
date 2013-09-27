@@ -110,4 +110,9 @@ exports.getAssignmentsThatNeedGrading = function(cb) {
       'where submitted_datetime is not null and g.assignment_id is null', cb);
 };
 
+exports.addFileToCodeReview =  function(uname, assignment_id, file_name, code, cb) {
+  db.run('insert into code_reviews (uname, assignment_id, file_name, code) ' +
+      'values (?, ?, ?, ?)', uname, assignment_id, file_name, code, cb);
+};
+
 setup();
