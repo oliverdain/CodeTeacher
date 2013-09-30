@@ -34,20 +34,16 @@ CodeReview.prototype.commentsToCodeBlocks = function(comments, $elem) {
       endLine = comments[i + 1].startLine;
     }
     var block = this.createCodeBlock(comments[i].startLine, endLine);
+    $elem.append(block.$codeElem);
+
     if (comments[i].comment && comments[i].comment.length > 0) {
       block.comment = this.getCommentObject(comments[i].comment);
+      $elem.append(block.comment.$elems);
     } else {
       block.comment = null;
     }
-
-    // TODO(odain) we should detach this $elem first so we don't redraw the
-    // screen once for each comment.
-    $elem.append(block.$codeElem);
-    $elem.append(block.comment.$elems);
   }
-  
 };
-
 
 CodeReview.prototype.createCodeElem = function(startLine, endLine) {
   console.assert(startLine >= 0);
