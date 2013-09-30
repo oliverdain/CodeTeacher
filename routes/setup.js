@@ -25,7 +25,9 @@ exports.setup = function(app) {
   verbs.post('RESUBMIT_ASSIGN', '/resubmit_assignment',
       handlers.changeAssignmentURL);
   verbs.get('CODE_REVIEW', '/cr/', ':uname/:assign_id', handlers.cr);
-  verbs.get('FILE_REVIEW', '/file_review/', ':uname/:fname', handlers.fileReview);
+  verbs.get('FILE_REVIEW', '/file_review/', ':uname/:assign_id/:fname', handlers.fileReview);
+  verbs.get('FILE_REVIEW_CONTENT', '/file_review_content/', ':uname/:assign_id/:fname',
+      handlers.fileReviewContent);
   verbs.post('ADD_CODE_TO_REVIEW', '/add_to_review', handlers.addCodeToReview);
 };
 

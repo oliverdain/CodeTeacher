@@ -1,9 +1,17 @@
 // Constructor. Puts the syntax highlighted code in jquery wrapped HTML element
-// $elem
-var CodeReview = function(code, $elem) {
+// $elem. code is a string holding the code. comments is an array of codeBlocks
+// as constructed by createCodeBlock. commentChangeCb is called whenever new
+// comments are added or old ones deleted. It is called with the complete
+// comments array. $elem is the jquery wrapped element that should contain the
+// code review.
+var CodeReview = function(code, comments, commentChangeCb, $elem) {
   console.assert($elem.length === 1);
 
-  this.codeBlocks = [];
+  if (comments) {
+    this.codeBlocks = comments;
+  } else {
+    this.codeBlocks = [];
+  }
   var self = this;
 
   Rainbow.color(code, 'html', function(highlighted) {
@@ -34,6 +42,10 @@ CodeReview.prototype.createCodeElem = function(startLine, endLine) {
   return $pre;
 };
 
+// startLine is the 0-based index of the first line of code in the code block.
+// endLine is the 0-based *exclusive* index of the last line in the comment
+// block. The comment itself applies to the last line in the code block; in
+// other words, the comment applies to endLine - 1.
 CodeReview.prototype.createCodeBlock = function(startLine, endLine) {
   var block = {
     startLine: startLine,
@@ -58,6 +70,7 @@ CodeReview.prototype.onLineClick = function(lineNum) {
       break;
     }
   }
+
 
   if (idx === this.codeBlocks.length ||
       this.codeBlocks[idx].startLine > lineNum) {
@@ -147,20 +160,3 @@ CodeReview.prototype.getReviewData = function() {
 
   return result;
 }
-
-
-$(document).ready(function() {
-  $codeDiv = $('#main');
-  var code = ['<html>',
-              '    <head>',
-              '        <style>',
-              '           p {color: red;}',
-              '        </style>',
-              '        <script>var x = document.ready();</script>',
-              '    </head>',
-              '    <body>',
-              '        <p>This is a paragraph.</p>',
-              '    </body>',
-              '</html>'].join('\n');
-  var review = new CodeReview(code, $codeDiv);
-});

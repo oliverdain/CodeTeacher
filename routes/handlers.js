@@ -156,6 +156,18 @@ exports.addCodeToReview = function(req, res, next) {
   });
 };
 
-exports.fileReview = function(req, res) {
-  res.render('file_review', {});
+exports.fileReview = function(req, res, next) {
+  res.render('file_review', {review: req.params});
+};
+
+exports.fileReviewContent = function(req, res, next) {
+  db.getFileReviewData(req.params.uname, req.params.assign_id, req.params.fname,
+      function(err, result) {
+        if (err) {
+          next(err);
+        } else {
+          console.assert(result && result.code);
+          res.json(result);
+        }
+      });
 };

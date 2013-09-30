@@ -52,7 +52,7 @@ var onCodeSubmit = function(res) {
    $row.html($colFile);
 
    var $colAction = $('<a/>', {
-      href: '{{ routes.get.FILE_REVIEW }}{{ student.uname }}/' + fname
+      href: '{{ routes.get.FILE_REVIEW }}{{ student.uname }}/{{ assign.id }}/' + fname
    });
    $colAction.append('Review');
    $row.append($colAction);
