@@ -23,8 +23,18 @@
 
    <script>
       var saveComments = function(comments) {
-         console.log('I will save:');
-         console.dir(comments);
+         var postUrl = '{{ routes.post.SAVE_CR_COMMENTS }}{{ review.uname }}/' +
+            '{{ review.assign_id }}/{{ review.fname }}';
+         $.post(postUrl, {comments: comments})
+            .success(function(res) {
+               console.assert(res === 'SUCCESS');
+               console.debug('Comments saved to server');
+            })
+            .fail(function(err) {
+               console.log('Error saving comments:');
+               console.dir(err);
+               flashError('Unable to save comments to server: ' + err.responseText);
+            });
       };
 
       var reviewRetrieved = function(rData) {
@@ -41,10 +51,9 @@
             '{{ review.uname }}/{{ review.assign_id }}/{{ review.fname }}')
          .success(reviewRetrieved)
          .fail(function(err) {
-            var $p = $('<p/>');
-            $p.text(err.toString());
-            $('#flash_error').append($p);
-            $('#flash_error').addClass('show-flash').removeClass('hide-flash');
+            console.log('Error retrieving code review:');
+            console.dir(err);
+            flashError('Unable to retrieving code review: ' + err.responseText);
          });
       });
    </script>

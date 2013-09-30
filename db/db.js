@@ -125,4 +125,10 @@ exports.addFileToCodeReview =  function(uname, assignment_id, file_name, code, c
       'values (?, ?, ?, ?)', uname, assignment_id, file_name, code, cb);
 };
 
+exports.saveCRComments = function(uname, assign_id, file_name, comments, cb) {
+  db.run('update code_reviews set comment_blocks = ? where ' +
+      'uname = ? and assignment_id = ? and file_name = ?',
+      JSON.stringify(comments), uname, assign_id, file_name, cb);
+};
+
 setup();

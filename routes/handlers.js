@@ -171,3 +171,17 @@ exports.fileReviewContent = function(req, res, next) {
         }
       });
 };
+
+exports.saveCRComments = function(req, res, next) {
+  console.log('saveCRComments called with:');
+  console.dir(req.body);
+  db.saveCRComments(req.params.uname, req.params.assign_id, req.params.fname,
+      req.body.comments,
+      function(err) {
+        if (err) {
+          next(err);
+        } else {
+          res.send('SUCCESS');
+        }
+      });
+};

@@ -7,6 +7,7 @@
 var CodeReview = function(code, comments, commentChangeCb, $elem) {
   console.assert($elem.length === 1);
 
+  this.commentChangeCb = commentChangeCb;
   if (comments) {
     this.codeBlocks = codeBlocksFromComments(comments);
   } else {
@@ -117,6 +118,22 @@ CodeReview.prototype.onLineClick = function(lineNum) {
   }
 };
 
+CodeReview.prototype.callSaveCallback = function() {
+  var toSave = [];
+  for (var i = 0; i < this.codeBlocks.length; ++i) {
+    var c = {};
+    c.startLine = this.codeBlocks[i].startLine;
+    if (this.codeBlocks[i].comment) {
+      c.comment = this.codeBlocks[i].comment.value;
+    } else {
+      c.comment = '';
+    }
+    toSave.push(c);
+  }
+
+  this.commentChangeCb(toSave);
+};
+
 // Returns the controls for adding comments to the given line.
 CodeReview.prototype.getCommentObject = function(lineNum) {
   var commentObj = {
@@ -128,8 +145,11 @@ CodeReview.prototype.getCommentObject = function(lineNum) {
   var $save = $('<button/>', {disabled: true}).text('Save');
   var $cancel = $('<button/>', {disabled: true}).text('Cancel');
 
+  var self = this;
+
   $save.click(function(event) {
     commentObj.value = $textarea.val();
+    _.bind(self.callSaveCallback, self)();
     $save.attr('disabled', true);
     $cancel.attr('disabled', true);
   });
