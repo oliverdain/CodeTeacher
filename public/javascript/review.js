@@ -8,7 +8,7 @@ var CodeReview = function(code, comments, commentChangeCb, $elem) {
   console.assert($elem.length === 1);
 
   if (comments) {
-    this.codeBlocks = comments;
+    this.codeBlocks = codeBlocksFromComments(comments);
   } else {
     this.codeBlocks = [];
   }
@@ -66,16 +66,28 @@ CodeReview.prototype.onLineClick = function(lineNum) {
   //
   // TODO(odain) Convert to binary search.
   for (var idx = 0; idx < this.codeBlocks.length; ++idx) {
-    if (this.codeBlocks[idx].startLine >= lineNum) {
+    if (this.codeBlocks[idx].startLine === lineNum + 1) {
+      console.debug('There is already a comment on this line. Ignoring the click.');
+      return;
+    }
+
+    if (this.codeBlocks[idx].startLine > lineNum) {
       break;
     }
   }
 
-
-  if (idx === this.codeBlocks.length ||
-      this.codeBlocks[idx].startLine > lineNum) {
-    --idx;
+  if (idx === this.codeBlocks.length &&
+      (lineNum === this.syntaxLines.length - 1)) {
+    // We're trying to add a comment to the last line. There's an edge condition
+    // here we need to check for to be sure there isn't already a comment there.
+    if (this.codeBlocks[this.codeBlocks.length - 1].comment !== null) {
+      console.debug('The last line already has a comment. Ignoring click.');
+      return;
+    }
   }
+
+  // Above we found the first block *after* the one we clicked on, so back up.
+  --idx;
 
   $replaceCodeElem = 
       this.createCodeElem(this.codeBlocks[idx].startLine, lineNum + 1);
