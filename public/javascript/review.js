@@ -8,19 +8,44 @@ var CodeReview = function(code, comments, commentChangeCb, $elem) {
   console.assert($elem.length === 1);
 
   this.commentChangeCb = commentChangeCb;
-  if (comments) {
-    this.codeBlocks = codeBlocksFromComments(comments);
-  } else {
-    this.codeBlocks = [];
-  }
+  this.codeBlocks = [];
   var self = this;
 
   Rainbow.color(code, 'html', function(highlighted) {
     self.syntaxLines = highlighted.split('\n');
     var codeBlock = self.createCodeBlock(0, self.syntaxLines.length);
     self.codeBlocks.push(codeBlock);
-    $elem.append(codeBlock.$codeElem);
+    self.commentsToCodeBlocks(comments, $elem);
   });
+};
+
+CodeReview.prototype.commentsToCodeBlocks = function(comments, $elem) {
+  if (! comments || comments.length === 0) {
+    comments = [{startLine: 0, comment: ''}];
+  }
+
+  console.assert(comments.length >= 1);
+
+  for (var i = 0; i < comments.length; ++i) {
+    var endLine;
+    if (i === comments.length - 1) {
+      endLine = this.syntaxLines.length;
+    } else {
+      endLine = comments[i + 1].startLine;
+    }
+    var block = this.createCodeBlock(comments[i].startLine, endLine);
+    if (comments[i].comment && comments[i].comment.length > 0) {
+      block.comment = this.getCommentObject(comments[i].comment);
+    } else {
+      block.comment = null;
+    }
+
+    // TODO(odain) we should detach this $elem first so we don't redraw the
+    // screen once for each comment.
+    $elem.append(block.$codeElem);
+    $elem.append(block.comment.$elems);
+  }
+  
 };
 
 
@@ -34,7 +59,7 @@ CodeReview.prototype.createCodeElem = function(startLine, endLine) {
   for (i = startLine; i < endLine; ++i) {
     var $numSpan = $('<span/>', {class: 'line-number'});
     $numSpan.append((i + 1).toString());
-    $numSpan.click(_.bind(this.onLineClick, this, i));
+    $numSpan.click(_.bind(this.addComment, this, i));
     $pre.append($numSpan);
     $pre.append(this.syntaxLines[i]);
     $pre.append('\n');
@@ -47,7 +72,7 @@ CodeReview.prototype.createCodeElem = function(startLine, endLine) {
 // endLine is the 0-based *exclusive* index of the last line in the comment
 // block. The comment itself applies to the last line in the code block; in
 // other words, the comment applies to endLine - 1.
-CodeReview.prototype.createCodeBlock = function(startLine, endLine) {
+CodeReview.prototype.createCodeBlock = function(startLine, endLine, comment) {
   var block = {
     startLine: startLine,
     comment: null,
@@ -57,7 +82,7 @@ CodeReview.prototype.createCodeBlock = function(startLine, endLine) {
   return block;
 };
 
-CodeReview.prototype.onLineClick = function(lineNum) {
+CodeReview.prototype.addComment = function(lineNum) {
   console.assert(lineNum >= 0);
   console.assert(lineNum < this.syntaxLines.length);
 
@@ -95,7 +120,7 @@ CodeReview.prototype.onLineClick = function(lineNum) {
   this.codeBlocks[idx].$codeElem.replaceWith($replaceCodeElem);
   this.codeBlocks[idx].$codeElem = $replaceCodeElem;
 
-  var comment = this.getCommentObject(lineNum);
+  var comment = this.getCommentObject();
 
   this.codeBlocks[idx].$codeElem.after(comment.$elems);
   this.codeBlocks[idx].comment = comment;
@@ -135,13 +160,16 @@ CodeReview.prototype.callSaveCallback = function() {
 };
 
 // Returns the controls for adding comments to the given line.
-CodeReview.prototype.getCommentObject = function(lineNum) {
+CodeReview.prototype.getCommentObject = function(comment) {
   var commentObj = {
     value: ''
   };
 
   var $wrapper = $('<div/>', {class: 'comment-wrapper'});
   var $textarea = $('<textarea/>', {rows: 10, cols: 80});
+  if (comment) {
+    $textarea.val(comment);
+  }
   var $save = $('<button/>', {disabled: true}).text('Save');
   var $cancel = $('<button/>', {disabled: true}).text('Cancel');
 

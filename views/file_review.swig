@@ -43,7 +43,7 @@
          $codeDiv = $('#main');
          // TODO(odain) Pass in any existing comments.
          var rWidget = new CodeReview(
-               rData.code, rData.comment_blocks, saveComments, $codeDiv);
+               rData.code, JSON.parse(rData.comment_blocks), saveComments, $codeDiv);
       };
       
       $(document).ready(function() {
