@@ -157,7 +157,7 @@ exports.addCodeToReview = function(req, res, next) {
 };
 
 exports.fileReview = function(req, res, next) {
-  res.render('file_review', {review: req.params});
+  res.render('file_review', {review: req.params, role: req.session.role});
 };
 
 exports.fileReviewContent = function(req, res, next) {

@@ -41,9 +41,13 @@
          console.log('File review data retrieved.:');
          console.dir(rData);
          $codeDiv = $('#main');
+         var saveCb = null;
+         if ('{{ role }}' === 'teacher') {
+            saveCb = saveComments;
+         }
          // TODO(odain) Pass in any existing comments.
          var rWidget = new CodeReview(
-               rData.code, JSON.parse(rData.comment_blocks), saveComments, $codeDiv);
+               rData.code, JSON.parse(rData.comment_blocks), saveCb, $codeDiv);
       };
       
       $(document).ready(function() {

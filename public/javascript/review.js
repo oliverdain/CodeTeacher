@@ -4,6 +4,9 @@
 // comments are added or old ones deleted. It is called with the complete
 // comments array. $elem is the jquery wrapped element that should contain the
 // code review.
+//
+// If commentChangeCb is null, it is assumed this review is being viewed by a
+// student so the review isn't editable.
 var CodeReview = function(code, comments, commentChangeCb, $elem) {
   console.assert($elem.length === 1);
 
@@ -13,9 +16,7 @@ var CodeReview = function(code, comments, commentChangeCb, $elem) {
 
   Rainbow.color(code, 'html', function(highlighted) {
     self.syntaxLines = highlighted.split('\n');
-    var codeBlock = self.createCodeBlock(0, self.syntaxLines.length);
-    self.codeBlocks.push(codeBlock);
-    self.commentsToCodeBlocks(comments, $elem);
+    _.bind(self.commentsToCodeBlocks, self, comments, $elem)();
   });
 };
 
@@ -33,7 +34,10 @@ CodeReview.prototype.commentsToCodeBlocks = function(comments, $elem) {
     } else {
       endLine = comments[i + 1].startLine;
     }
-    var block = this.createCodeBlock(comments[i].startLine, endLine);
+
+    // Make sure startLine is a number!
+    var startLine = comments[i].startLine * 1;
+    var block = this.createCodeBlock(startLine, endLine);
     $elem.append(block.$codeElem);
 
     if (comments[i].comment && comments[i].comment.length > 0) {
@@ -42,6 +46,8 @@ CodeReview.prototype.commentsToCodeBlocks = function(comments, $elem) {
     } else {
       block.comment = null;
     }
+
+    this.codeBlocks.push(block);
   }
 };
 
