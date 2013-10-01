@@ -125,6 +125,7 @@ CodeReview.prototype.addComment = function(lineNum) {
   var comment = this.getCommentObject();
 
   this.codeBlocks[idx].$codeElem.after(comment.$elems);
+  var oldCommentObj = this.codeBlocks[idx].comment;
   this.codeBlocks[idx].comment = comment;
 
   if (lineNum + 1 >= this.syntaxLines.length) {
@@ -138,6 +139,7 @@ CodeReview.prototype.addComment = function(lineNum) {
     }
 
     var newBlock = this.createCodeBlock(lineNum + 1, endLine);
+    newBlock.comment = oldCommentObj;
     this.codeBlocks[idx].comment.$elems.after(newBlock.$codeElem);
 
     this.codeBlocks.push(newBlock);
@@ -163,29 +165,29 @@ CodeReview.prototype.callSaveCallback = function() {
 
 // Returns the controls for adding comments to the given line.
 CodeReview.prototype.getCommentObject = function(comment) {
-  if (this.commentChangeCb === null) {
-    return this.getReadOnlyCommentObject(comment);
-  } else {
-    return this.getReadWriteCommentObject(comment);
-  }
-};
-
-CodeReview.prototype.getReadOnlyCommentObject = function(comment) {
   var commentObj = {
     value: ''
   };
 
+  if (comment && comment.length > 0) {
+    commentObj.value = comment;
+  }
+
+  if (this.commentChangeCb === null) {
+    return this.getReadOnlyCommentObject(comment, commentObj);
+  } else {
+    return this.getReadWriteCommentObject(comment, commentObj);
+  }
+};
+
+CodeReview.prototype.getReadOnlyCommentObject = function(comment, commentObj) {
   $commentBox = $('<pre/>', {class: 'readonly-comment'});
   $commentBox.text(comment);
   commentObj.$elems = $commentBox;
   return commentObj;
 };
 
-CodeReview.prototype.getReadWriteCommentObject = function(comment) {
-  var commentObj = {
-    value: ''
-  };
-
+CodeReview.prototype.getReadWriteCommentObject = function(comment, commentObj) {
   var $wrapper = $('<div/>', {class: 'comment-wrapper'});
   var $textarea = $('<textarea/>', {rows: 10, cols: 80});
   if (comment) {
