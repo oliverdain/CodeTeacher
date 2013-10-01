@@ -163,6 +163,25 @@ CodeReview.prototype.callSaveCallback = function() {
 
 // Returns the controls for adding comments to the given line.
 CodeReview.prototype.getCommentObject = function(comment) {
+  if (this.commentChangeCb === null) {
+    return this.getReadOnlyCommentObject(comment);
+  } else {
+    return this.getReadWriteCommentObject(comment);
+  }
+};
+
+CodeReview.prototype.getReadOnlyCommentObject = function(comment) {
+  var commentObj = {
+    value: ''
+  };
+
+  $commentBox = $('<pre/>', {class: 'readonly-comment'});
+  $commentBox.text(comment);
+  commentObj.$elems = $commentBox;
+  return commentObj;
+};
+
+CodeReview.prototype.getReadWriteCommentObject = function(comment) {
   var commentObj = {
     value: ''
   };
