@@ -3,6 +3,17 @@
 {% block head %}
    {% parent %}
    <script src="/javascript/third_party/jquery-1.9.1.min.js"></script>
+
+   <style>
+      #grade_form {
+         background-color: #E9E9DF;
+         padding: 2em;
+         box-shadow: 10px 10px 5px #888888;
+         position: fixed;
+         right: 2em;
+         top: 2em; 
+      }
+   </style>
 {% endblock %}
 
 {% block body %}
@@ -30,6 +41,17 @@
    <tbody id="cr_files">
    </tbody>
 </table>
+
+<div id="grade_form">
+<h2>Submit Grade</h2>
+<form method="post" action="{{ routes.post.SUBMIT_GRADE }}">
+   <textarea cols="80" rows="10" name="comments"></textarea>
+   <br>
+   <label for="grade">Grade:</label>
+   <input type="text" id="grade" name="grade">
+   <input type="submit" value="Submit">
+</form>
+</div>
 
 <h2>Add Code</h2>
 
