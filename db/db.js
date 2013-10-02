@@ -128,7 +128,8 @@ exports.getAssignmentsThatNeedGrading = function(cb) {
       'where submitted_datetime is not null and g.assignment_id is null', cb);
 };
 
-exports.addFileToCodeReview =  function(uname, assignment_id, file_name, code, cb) {
+exports.addFileToCodeReview =  function(
+    uname, assignment_id, file_name, code, cb) {
   db.run('insert into code_reviews (uname, assignment_id, file_name, code) ' +
       'values (?, ?, ?, ?)', uname, assignment_id, file_name, code, cb);
 };
@@ -149,6 +150,11 @@ exports.submitGrade = function(uname, assign_id, grade, comments, cb) {
       '(uname, assignment_id, datetime, grade, comments) values ' +
       "(?, ?, datetime('now', 'localtime'), ?, ?)",
       uname, assign_id, grade, comments, cb);
+};
+
+exports.getAssignmentGrade = function(uname, assign_id, cb) {
+  db.get('select * from grades where uname = ? and assignment_id = ?',
+      uname, assign_id, cb);
 };
 
 setup();

@@ -22,6 +22,12 @@ exports.setup = function(app) {
   verbs.post('SUBMIT_ASSIGN', '/submit_assignment', handlers.submitAssignment);
   verbs.post('RESUBMIT_ASSIGN', '/resubmit_assignment',
       handlers.changeAssignmentURL);
+  verbs.get('GRADED_ASSIGN', '/grades_assign/', ':uname/:assign_id',
+      handlers.gradedAssignment);
+  verbs.get('FILE_REVIEW', '/file_review/', ':uname/:assign_id/:fname',
+      handlers.fileReview);
+  verbs.get('FILE_REVIEW_CONTENT', '/file_review_content/',
+      ':uname/:assign_id/:fname', handlers.fileReviewContent);
 
 
   ////////////////////////////////////////////////////////////
@@ -31,10 +37,6 @@ exports.setup = function(app) {
   app.post('*', auth.requireTeacher);
 
   verbs.get('CODE_REVIEW', '/cr/', ':uname/:assign_id', handlers.cr);
-  verbs.get('FILE_REVIEW', '/file_review/', ':uname/:assign_id/:fname',
-      handlers.fileReview);
-  verbs.get('FILE_REVIEW_CONTENT', '/file_review_content/',
-      ':uname/:assign_id/:fname', handlers.fileReviewContent);
   verbs.post('SAVE_CR_COMMENTS', '/save_cr_comments/',
       ':uname/:assign_id/:fname', handlers.saveCRComments);
   verbs.post('ADD_CODE_TO_REVIEW', '/add_to_review', handlers.addCodeToReview);

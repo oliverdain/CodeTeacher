@@ -16,7 +16,7 @@
 {%block body %}
    {% parent %}
    <div id="header">
-      <h1>Code Review</h1>
+      <h1>Code Review for {{ review.fname }}</h1>
    </div>
    <div id="main">
    </div>

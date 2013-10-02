@@ -203,3 +203,25 @@ exports.saveCRComments = function(req, res, next) {
         }
       });
 };
+
+exports.gradedAssignment = function(req, res, next) {
+  async.parallel([
+      _.partial(db.getAssignmentGrade, req.params.uname, req.params.assign_id),
+      _.partial(db.getCRFiles, req.params.uname, req.params.assign_id),
+      _.partial(db.getAssignmentData, req.params.assign_id)
+      ],
+
+      function(err, results) {
+        if (err) {
+          next(err);
+        } else {
+          res.render('graded_assignment', {
+            grade: results[0],
+            files: results[1],
+            assign: results[2],
+            uname: req.params.uname,
+            assign_id: req.params.assign_id
+          });
+        }
+      });
+};
