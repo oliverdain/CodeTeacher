@@ -123,7 +123,7 @@ exports.getAssignmentsThatNeedGrading = function(cb) {
   db.all('select sw.assignment_id, sw.uname, sw.submitted_url, ' +
       'sw.submitted_datetime, a.name, u.fullname, a.due_datetime ' +
       'from (student_work sw join users u on (u.uname = sw.uname)) ' +
-      'left join grades g on '
+      'left join grades g on ' +
       '(g.assignment_id = sw.assignment_id and g.uname = sw.uname) ' +
       'join assignments a on (a.id = sw.assignment_id) ' +
       'where submitted_datetime is not null and g.assignment_id is null', cb);
