@@ -109,7 +109,36 @@ None.
 {% endif %}
 
 <h2>Graded Assignments</h2>
+{% if graded && graded.length > 0 %}
+<table>
+   <thead>
+      <tr>
+         <td>
+            Name
+         </td>
+         <td>
+            Grade
+         </td>
+      </tr>
+   </thead>
+   <tbody>
+      {% for idx, assign in graded %}
+      <tr>
+         <td>
+            <a href="{{ routes.get.GRADED_ASSIGN }}{{ uname }}/{{ assign.assignment_id }}">
+               {{ assign.name }}
+            </a>
+         </td>
+         <td>
+            {{ assign.grade }}
+         </td>
+      </tr>
+      {% endfor %}
+   </tbody>
+</table>
+{% else %}
 None.
+{% endif %}
 
 <div id="links">
    <h2>Useful Links</h2>

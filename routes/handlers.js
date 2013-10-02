@@ -31,7 +31,8 @@ exports.home = function(req, res, next) {
             notstarted: allResults[0],
             submitted: allResults[1],
             graded: allResults[2],
-            fullname: allResults[3].fullname
+            fullname: allResults[3].fullname,
+            uname: req.session.user
           };
           res.render('home', renderData);
         }
@@ -159,6 +160,18 @@ exports.addCodeToReview = function(req, res, next) {
       res.send('SUCCESS');
     }
   });
+};
+
+exports.submitGrade = function(req, res, next) {
+  db.submitGrade(req.body.uname, req.body.assign_id, req.body.grade,
+      req.body.comments,
+      function(err, results) {
+        if (err) {
+          next(err);
+        } else {
+          res.send('Grade submitted');
+        }
+      });
 };
 
 exports.fileReview = function(req, res, next) {

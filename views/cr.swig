@@ -63,8 +63,10 @@
 <div id="grade_form">
 <h2>Submit Grade</h2>
 <form method="post" action="{{ routes.post.SUBMIT_GRADE }}">
-   <textarea cols="80" rows="10" name="comments"></textarea>
+   <textarea cols="50" rows="10" name="comments"></textarea>
    <br>
+   <input type="hidden" value="{{ student.uname }}" name="uname">
+   <input type="hidden" value="{{ submitted.assignment_id }}" name="assign_id">
    <label for="grade">Grade:</label>
    <input type="text" id="grade" name="grade">
    <input type="submit" value="Submit">

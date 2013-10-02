@@ -34,6 +34,7 @@ var setup = function() {
         'assignment_id INTEGER NOT NULL, ' +
         'datetime TEXT NOT NULL, ' +
         'grade INTEGER NOT NULL, ' +
+        'comments TEXT, ' +
         'PRIMARY KEY(uname, assignment_id))';
     db.run(grades);
 
@@ -91,12 +92,14 @@ exports.getAssignmentsNotSubmitted = function(uname, cb) {
 
 exports.getUngradedAssignments = function(uname, cb) {
   db.all('select a.name, a.id, submitted_url, submitted_datetime from ' +
-      'student_work w, assignments a where a.id = w.assignment_id and ' +
-     'uname = ?', uname, cb);
+      '(student_work w join assignments a on (a.id = w.assignment_id and ' +
+      'w.uname = ?)) left join grades g on ' +
+      '(g.uname = w.uname and g.assignment_id = a.id) where ' +
+      'g.uname is null', uname, cb);
 };
 
 exports.getGradedAssignments = function(uname, cb) {
-  db.all('select a.name, uname from grades g, assignments a where ' +
+  db.all('select a.name, g.* from grades g, assignments a where ' +
       'g.assignment_id = a.id and g.uname = ?', uname, cb);
 };
 
@@ -139,6 +142,13 @@ exports.saveCRComments = function(uname, assign_id, file_name, comments, cb) {
   db.run('update code_reviews set comment_blocks = ? where ' +
       'uname = ? and assignment_id = ? and file_name = ?',
       JSON.stringify(comments), uname, assign_id, file_name, cb);
+};
+
+exports.submitGrade = function(uname, assign_id, grade, comments, cb) {
+  db.run('insert into grades ' +
+      '(uname, assignment_id, datetime, grade, comments) values ' +
+      "(?, ?, datetime('now', 'localtime'), ?, ?)",
+      uname, assign_id, grade, comments, cb);
 };
 
 setup();
