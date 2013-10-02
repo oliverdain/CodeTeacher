@@ -71,6 +71,11 @@ exports.getAssignmentData = function(assign_id, cb) {
   db.get('select * from assignments where id = ?', assign_id, cb);
 };
 
+exports.getSubmittedData = function(uname, assign_id, cb) {
+  db.get('select * from student_work where uname = ? and assignment_id = ?',
+      uname, assign_id, cb);
+};
+
 exports.getFileReviewData = function(uname, assign_id, fname, cb) {
   db.get('select code, comment_blocks from code_reviews where ' +
       'uname = ? and assignment_id = ? and file_name = ?',

@@ -130,7 +130,8 @@ exports.changeAssignmentURL = function(req, res, next) {
 exports.cr = function(req, res, next) {
   async.parallel([
       _.partial(db.getUserData, req.params.uname),
-      _.partial(db.getAssignmentData, req.params.assign_id)],
+      _.partial(db.getAssignmentData, req.params.assign_id),
+      _.partial(db.getSubmittedData, req.params.uname, req.params.assign_id)],
 
   function(err, results) {
     if (err) {
@@ -138,9 +139,11 @@ exports.cr = function(req, res, next) {
       return;
     }
     
+    console.assert(results.length === 3);
     res.render('cr', {
       student: results[0],
-      assign: results[1]
+      assign: results[1],
+      submitted: results[2]
     });
   });
 }

@@ -25,6 +25,14 @@
 <p>
    Student: {{ student.fullname }}
 </p>
+<p>
+   Submitted URL: <a href="{{ submitted.submitted_url }}">
+      {{ submitted.submitted_url }}
+   </a>
+</p>
+<p>
+   Submitted Time: {{ submitted.submitted_datetime }}
+</p>
 
 <h2>Files in Review</h2>
 <table>
