@@ -19,6 +19,7 @@ app.engine('swig', swig.renderFile);
 app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'swig');
 app.set('views', __dirname + '/views');
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -26,9 +27,11 @@ app.use(flash());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(express.cookieSession({secret: 'LASNFQU#$%)*@J'}));
+
+var STATIC_PATH = path.join(__dirname, '/public');
+app.use(require('less-middleware')({ src: STATIC_PATH }));
+app.use(express.static(STATIC_PATH));
 app.use(app.router);
-app.use(require('less-middleware')({ src: __dirname + '/public' }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {

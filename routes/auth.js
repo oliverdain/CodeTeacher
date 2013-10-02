@@ -184,8 +184,17 @@ var requireAuth = function(req, res, next) {
     res.redirect(verbs.routes('get', 'LOGIN'));
   }
 };
-
 exports.requireAuth = requireAuth;
+
+exports.requireTeacher = function(req, res, next) {
+  if (req.session && req.session.role &&
+      req.session.role === 'teacher') {
+    next();
+  } else {
+    res.send('Disallowed. You are not a teacher.');
+  }
+};
+
 
 exports.setup = function() {
   verbs.post('REGISTER', '/register', onRegister);

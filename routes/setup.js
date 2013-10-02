@@ -2,8 +2,6 @@ var handlers = require('./handlers');
 var verbs = require('./verbs');
 var auth = require('./auth');
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // Setup routes here.
 ////////////////////////////////////////////////////////////////////////////////
@@ -14,16 +12,24 @@ var auth = require('./auth');
 exports.setup = function(app) {
   auth.setup();
 
-  app.get('*', auth.requireAuth);
-  app.post('*', auth.requireAuth);
-
   ///////////////////////////////////////////////
   // All routes below this require autentication!
   ///////////////////////////////////////////////
+  app.get('*', auth.requireAuth);
+  app.post('*', auth.requireAuth);
+
   verbs.get('HOME', '/', handlers.home);
   verbs.post('SUBMIT_ASSIGN', '/submit_assignment', handlers.submitAssignment);
   verbs.post('RESUBMIT_ASSIGN', '/resubmit_assignment',
       handlers.changeAssignmentURL);
+
+
+  ////////////////////////////////////////////////////////////
+  // All routes below this require that the user is a teacher!
+  ////////////////////////////////////////////////////////////
+  app.get('*', auth.requireTeacher);
+  app.post('*', auth.requireTeacher);
+
   verbs.get('CODE_REVIEW', '/cr/', ':uname/:assign_id', handlers.cr);
   verbs.get('FILE_REVIEW', '/file_review/', ':uname/:assign_id/:fname',
       handlers.fileReview);
