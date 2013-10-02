@@ -15,4 +15,5 @@ node_modules/
 npm-debug.log
 
 *.css
+!public/stylesheets/third_party/**/*.css
 *.sqlite
