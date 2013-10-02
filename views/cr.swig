@@ -47,6 +47,16 @@
       </tr>
    </thead>
    <tbody id="cr_files">
+      {% for f in files %}
+         <tr>
+            <td>
+               {{ f.file_name }}
+            </td>
+            <td>
+               <a href="{{ routes.get.FILE_REVIEW }}{{ student.uname }}/{{ assign.id }}/{{ f.file_name }}">Review</a>
+            </td>
+         </tr>
+      {% endfor %}
    </tbody>
 </table>
 
