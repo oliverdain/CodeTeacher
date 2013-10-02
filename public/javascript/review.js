@@ -7,14 +7,14 @@
 //
 // If commentChangeCb is null, it is assumed this review is being viewed by a
 // student so the review isn't editable.
-var CodeReview = function(code, comments, commentChangeCb, $elem) {
+var CodeReview = function(code, language, comments, commentChangeCb, $elem) {
   console.assert($elem.length === 1);
 
   this.commentChangeCb = commentChangeCb;
   this.codeBlocks = [];
   var self = this;
 
-  Rainbow.color(code, 'html', function(highlighted) {
+  Rainbow.color(code, language, function(highlighted) {
     self.syntaxLines = highlighted.split('\n');
     _.bind(self.commentsToCodeBlocks, self, comments, $elem)();
   });

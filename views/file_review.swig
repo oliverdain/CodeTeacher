@@ -22,6 +22,12 @@
    </div>
 
    <script>
+      var EXTENSION_MAP = {
+         'html': 'html',
+         'css': 'CSS',
+         'js': 'Javascript'
+      };
+
       var saveComments = function(comments) {
          var postUrl = '{{ routes.post.SAVE_CR_COMMENTS }}{{ review.uname }}/' +
             '{{ review.assign_id }}/{{ review.fname }}';
@@ -45,9 +51,14 @@
          if ('{{ role }}' === 'teacher') {
             saveCb = saveComments;
          }
-         // TODO(odain) Pass in any existing comments.
+         var extension = '{{ review.fname }}'
+         extension = extension.split('.').slice(-1)[0];
+         extension = extension.toLowerCase();
+         var lang = EXTENSION_MAP[extension];
+
          var rWidget = new CodeReview(
-               rData.code, JSON.parse(rData.comment_blocks), saveCb, $codeDiv);
+            rData.code, lang, JSON.parse(rData.comment_blocks),
+            saveCb, $codeDiv);
       };
       
       $(document).ready(function() {
