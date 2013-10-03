@@ -41,5 +41,7 @@ exports.setup = function(app) {
       ':uname/:assign_id/:fname', handlers.saveCRComments);
   verbs.post('ADD_CODE_TO_REVIEW', '/add_to_review', handlers.addCodeToReview);
   verbs.post('SUBMIT_GRADE', '/submit_grade', handlers.submitGrade);
+  verbs.get('STUDENT_GRADES', '/student_grades/', ':uname',
+      handlers.getStudentGrades);
 };
 

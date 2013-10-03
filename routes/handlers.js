@@ -225,3 +225,22 @@ exports.gradedAssignment = function(req, res, next) {
         }
       });
 };
+
+exports.getStudentGrades = function(req, res, next) {
+  async.parallel([
+      _.partial(db.getGradesForStudent, req.params.uname),
+      _.partial(db.getFullName, req.params.uname)
+      ],
+
+      function(err, results) {
+        if (err) {
+          next(err);
+        } else {
+          res.render('grades_for_student', {
+            grades: results[0],
+            uname: req.params.uname,
+            fullname: results[1].fullname
+          });
+        }
+      });
+};

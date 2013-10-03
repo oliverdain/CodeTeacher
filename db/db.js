@@ -158,4 +158,10 @@ exports.getAssignmentGrade = function(uname, assign_id, cb) {
       uname, assign_id, cb);
 };
 
+exports.getGradesForStudent = function(uname, cb) {
+  db.all('select * from assignments a, grades g, student_work sw where ' +
+      'a.id = g.assignment_id and a.id = sw.assignment_id and ' +
+      'g.uname = sw.uname and g.uname = ?', uname, cb);
+};
+
 setup();

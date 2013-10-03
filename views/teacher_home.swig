@@ -84,7 +84,7 @@
       {% for idx, user in allUsers %}
       <tr>
          <td>
-            {{ user.fullname }}
+            <a href="{{ routes.get.STUDENT_GRADES }}{{ user.uname }}">{{ user.fullname }}</a>
          </td>
          <td>
             {{ user.uname }}
