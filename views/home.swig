@@ -148,12 +148,16 @@ None.
 
    <h3>HTML References</h3>
    <ul>
+      <li><a href="http://www.w3schools.com/tags/ref_byfunc.asp">W3Schools</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">Mozilla DN</a></li>
       <li><a href="http://reference.sitepoint.com/html">Sitepoint</a></li>
       <li><a href="http://htmldog.com/reference/htmltags/">HTMLDog</a></li>
    </ul>
 
    <h3>CSS References</h3>
    <ul>
+      <li><a href="http://www.w3schools.com/cssref/default.asp">W3Schools</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference">Mozilla DN</a></li>
       <li><a href="http://reference.sitepoint.com/css">Sitepoint</a></li>
       <li><a href="http://htmldog.com/reference/cssproperties/">HTMLDog</a></li>
    </ul>
