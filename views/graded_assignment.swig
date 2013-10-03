@@ -14,9 +14,9 @@
 <h1>Grade for {{ assign.name }}</h1>
 
 Comments:
-<pre id="assign_comments">
-   {{ grade.comments }}
-</pre>
+<div id="assign_comments">
+   {{ grade.comments|escape|replace('\n', '<br>', 'g')|safe }}
+</div>
 Grade: <span id="grade">{{ grade.grade }}</span>
 
 <h2>Files</h2>
