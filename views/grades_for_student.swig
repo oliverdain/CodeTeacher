@@ -19,6 +19,12 @@
             Submitted URL
          </td>
          <td>
+            Assignment Due
+         </td>
+         <td>
+            Assignment Submitted
+         </td>
+         <td>
             Grade
          </td>
       </tr>
@@ -33,6 +39,12 @@
          </td>
          <td>
             <a href="{{ g.submitted_url }}">{{ g.submitted_url }}</a>
+         </td>
+         <td>
+            {{ g.due_datetime }}
+         </td>
+         <td>
+            {{ g.submitted_datetime }}
          </td>
          <td>
             {{ g.grade }}
