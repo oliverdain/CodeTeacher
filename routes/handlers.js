@@ -208,7 +208,8 @@ exports.gradedAssignment = function(req, res, next) {
   async.parallel([
       _.partial(db.getAssignmentGrade, req.params.uname, req.params.assign_id),
       _.partial(db.getCRFiles, req.params.uname, req.params.assign_id),
-      _.partial(db.getAssignmentData, req.params.assign_id)
+      _.partial(db.getAssignmentData, req.params.assign_id),
+      _.partial(db.getSubmittedData, req.params.uname, req.params.assign_id)
       ],
 
       function(err, results) {
@@ -219,6 +220,7 @@ exports.gradedAssignment = function(req, res, next) {
             grade: results[0],
             files: results[1],
             assign: results[2],
+            submitted: results[3],
             uname: req.params.uname,
             assign_id: req.params.assign_id
           });

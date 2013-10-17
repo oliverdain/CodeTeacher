@@ -13,7 +13,9 @@
 {% parent %}
 <h1>Grade for {{ assign.name }}</h1>
 
-Comments:
+Submitted URL: <a href="{{ submitted.submitted_url }}">{{ submitted.submitted_url }}</a>
+
+<h2>Comments:</h2>
 <div id="assign_comments">
    {{ grade.comments|escape|replace('\n', '<br>', 'g')|safe }}
 </div>
