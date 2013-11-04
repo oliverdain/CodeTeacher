@@ -167,6 +167,7 @@ None.
    <ul>
       <li><a href="http://validator.w3.org/">W3C HTML Validator</a></li>
       <li><a href="http://jigsaw.w3.org/css-validator/">W3C CSS Validator</a></li>
+      <li><a href="http://www.w3.org/2003/12/semantic-extractor.html">W3C Semantic Extractor</a><li>
    </ul>
 
    <div id="logout-block">
