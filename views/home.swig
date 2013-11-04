@@ -163,6 +163,12 @@ None.
       <li><a href="http://htmldog.com/reference/cssproperties/">HTMLDog</a></li>
    </ul>
 
+   <h3>Validation Services</h3>
+   <ul>
+      <li><a href="http://validator.w3.org/">W3C HTML Validator</a></li>
+      <li><a href="http://jigsaw.w3.org/css-validator/">W3C CSS Validator</a></li>
+   </ul>
+
    <div id="logout-block">
       <a href="{{ routes.get.LOGOUT }}">Log Off</a>
    </div>

@@ -2,6 +2,7 @@
 
 {% block head %}
    {% parent %}
+   <title>Login</title>
    <style>
       #register_link {
          margin-top: 3em;
