@@ -167,7 +167,18 @@ None.
    <ul>
       <li><a href="http://validator.w3.org/">W3C HTML Validator</a></li>
       <li><a href="http://jigsaw.w3.org/css-validator/">W3C CSS Validator</a></li>
-      <li><a href="http://www.w3.org/2003/12/semantic-extractor.html">W3C Semantic Extractor</a><li>
+      <li><a href="http://www.w3.org/2003/12/semantic-extractor.html">W3C Semantic Extractor</a></li>
+   </ul>
+
+   <h3>Fonts</h3>
+   <ul>
+      <li><a href="http://www.google.com/fonts">Google Fonts</a></li>
+      <li><a href="http://www.apaddedcell.com/sites/www.apaddedcell.com/files/fonts-article/final/index.html">Font Support Table</a></li>
+      <li>Font Stacks:</li>
+      <ul>
+         <li><a href="http://www.erin-lawrence.com/webfonts/">Erin Lawrence's Stacks</a></li>
+         <li><a href="http://www.sitepoint.com/eight-definitive-font-stacks/">Sitepoint Stacks</a></li>
+      </ul>
    </ul>
 
    <div id="logout-block">
