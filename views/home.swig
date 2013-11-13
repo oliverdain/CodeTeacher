@@ -143,43 +143,49 @@ None.
 <div id="links">
    <h2>Useful Links</h2>
 
-   <h3>Code Editor</h3>
-   <a href="http://codio.com">Codio</a>
+   <div id="links-left">
+      <h3>Code Editor</h3>
+      <a href="http://codio.com">Codio</a>
 
-   <h3>HTML References</h3>
-   <ul>
-      <li><a href="http://www.w3.org/community/webed/wiki/HTML/Elements">W3C</a></li>
-      <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">Mozilla DN</a></li>
-      <li><a href="http://reference.sitepoint.com/html">Sitepoint</a></li>
-      <li><a href="http://htmldog.com/reference/htmltags/">HTMLDog</a></li>
-   </ul>
-
-   <h3>CSS References</h3>
-   <ul>
-      <li><a href="http://www.w3.org/community/webed/wiki/CSS/Properties">W3C Properties Reference</a></li>
-      <li><a href="http://www.w3.org/community/webed/wiki/CSS/Selectors">W3C Selectors Reference</a></li>
-      <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference">Mozilla DN</a></li>
-      <li><a href="http://reference.sitepoint.com/css">Sitepoint</a></li>
-      <li><a href="http://htmldog.com/reference/cssproperties/">HTMLDog</a></li>
-   </ul>
-
-   <h3>Validation Services</h3>
-   <ul>
-      <li><a href="http://validator.w3.org/">W3C HTML Validator</a></li>
-      <li><a href="http://jigsaw.w3.org/css-validator/">W3C CSS Validator</a></li>
-      <li><a href="http://www.w3.org/2003/12/semantic-extractor.html">W3C Semantic Extractor</a></li>
-   </ul>
-
-   <h3>Fonts</h3>
-   <ul>
-      <li><a href="http://www.google.com/fonts">Google Fonts</a></li>
-      <li><a href="http://www.apaddedcell.com/sites/www.apaddedcell.com/files/fonts-article/final/index.html">Font Support Table</a></li>
-      <li>Font Stacks:</li>
+      <h3>HTML References</h3>
       <ul>
-         <li><a href="http://www.erin-lawrence.com/webfonts/">Erin Lawrence's Stacks</a></li>
-         <li><a href="http://www.sitepoint.com/eight-definitive-font-stacks/">Sitepoint Stacks</a></li>
+         <li><a href="http://www.w3.org/community/webed/wiki/HTML/Elements">W3C</a></li>
+         <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">Mozilla DN</a></li>
+         <li><a href="http://reference.sitepoint.com/html">Sitepoint</a></li>
+         <li><a href="http://htmldog.com/reference/htmltags/">HTMLDog</a></li>
       </ul>
-   </ul>
+
+      <h3>CSS References</h3>
+      <ul>
+         <li><a href="http://www.w3.org/community/webed/wiki/CSS/Properties">W3C Properties Reference</a></li>
+         <li><a href="http://www.w3.org/community/webed/wiki/CSS/Selectors">W3C Selectors Reference</a></li>
+         <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference">Mozilla DN</a></li>
+         <li><a href="http://reference.sitepoint.com/css">Sitepoint</a></li>
+         <li><a href="http://htmldog.com/reference/cssproperties/">HTMLDog</a></li>
+      </ul>
+   </div>
+
+   <div id="links-right">
+      <h3>Validation Services</h3>
+      <ul>
+         <li><a href="http://validator.w3.org/">W3C HTML Validator</a></li>
+         <li><a href="http://jigsaw.w3.org/css-validator/">W3C CSS Validator</a></li>
+         <li><a href="http://www.w3.org/2003/12/semantic-extractor.html">W3C Semantic Extractor</a></li>
+      </ul>
+
+      <h3>Fonts</h3>
+      <ul>
+         <li><a href="http://www.google.com/fonts">Google Fonts</a></li>
+         <li><a href="http://www.apaddedcell.com/sites/www.apaddedcell.com/files/fonts-article/final/index.html">
+            Font Support Table
+         </a></li>
+         <li>Font Stacks:</li>
+         <ul>
+            <li><a href="http://www.erin-lawrence.com/webfonts/">Erin Lawrence's Stacks</a></li>
+            <li><a href="http://www.sitepoint.com/eight-definitive-font-stacks/">Sitepoint Stacks</a></li>
+         </ul>
+      </ul>
+   </div>
 
    <div id="logout-block">
       <a href="{{ routes.get.LOGOUT }}">Log Off</a>
