@@ -147,7 +147,7 @@ exports.saveCRComments = function(uname, assign_id, file_name, comments, cb) {
 };
 
 exports.submitGrade = function(uname, assign_id, grade, comments, cb) {
-  db.run('insert into grades ' +
+  db.run('insert or replace into grades ' +
       '(uname, assignment_id, datetime, grade, comments) values ' +
       "(?, ?, datetime('now', 'localtime'), ?, ?)",
       uname, assign_id, grade, comments, cb);

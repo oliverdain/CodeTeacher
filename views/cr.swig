@@ -5,13 +5,24 @@
    <script src="/javascript/third_party/jquery-1.9.1.min.js"></script>
 
    <style>
-      #grade_form {
+      #grade_form_wrapper {
          background-color: #E9E9DF;
          padding: 2em;
          box-shadow: 10px 10px 5px #888888;
          position: fixed;
          right: 2em;
          top: 2em; 
+      }
+
+      .hidden {
+         display: none;
+      }
+
+      #grade_submit_result {
+         border: 1px solid #000;
+         width: auto;
+         padding: 0.25em;
+         margin-top: 1em;
       }
    </style>
 {% endblock %}
@@ -60,17 +71,18 @@
    </tbody>
 </table>
 
-<div id="grade_form">
+<div id="grade_form_wrapper">
 <h2>Submit Grade</h2>
-<form method="post" action="{{ routes.post.SUBMIT_GRADE }}">
-   <textarea cols="50" rows="10" name="comments"></textarea>
+<form id="grade_form">
+   <textarea cols="50" rows="10" name="comments">{{ grade.comments }}</textarea>
    <br>
    <input type="hidden" value="{{ student.uname }}" name="uname">
    <input type="hidden" value="{{ submitted.assignment_id }}" name="assign_id">
    <label for="grade">Grade:</label>
-   <input type="text" id="grade" name="grade">
-   <input type="submit" value="Submit">
+   <input type="text" id="grade" name="grade" value="{{ grade.grade }}">
+   <input type="submit" value="Submit" id="submit_grade_btn">
 </form>
+<div id="grade_submit_result" class="hidden"></div>
 </div>
 
 <h2>Add Code</h2>
@@ -118,8 +130,36 @@ var addCode = function() {
          }, onCodeSubmit).fail(onCodeSubmitFail);
 };
 
+var submitGrade = function() {
+   $inputs = $('#grade_form :input');
+   data = {};
+   $inputs.each(function(idx) {
+      if (this.type === 'submit') {
+         return;
+      }
+      data[this.name] = this.value;
+   });
+   console.log('Submitting grade data: ', data);
+   $.post('{{ routes.post.SUBMIT_GRADE }}', data,
+      onGradeSubmitted).fail(onGradeError);
+   // So the form isn't actually submitted
+   return false;
+};
+
+var onGradeSubmitted = function(res) {
+   $('#grade_submit_result').text(res).removeClass('hidden');
+};
+
+var onGradeError = function(err) {
+   $('#grade_submit_result').text(err).removeClass('hidden');
+};
+
 $(document).ready(function() {
    $('#add_code_btn').click(addCode);
+   $('#grade_form').submit(submitGrade);
+   $('#grade_form').change(function() {
+      $('#grade_submit_result').addClass('hidden');
+   });
 });
 
 </script>

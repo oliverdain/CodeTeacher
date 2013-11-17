@@ -133,7 +133,8 @@ exports.cr = function(req, res, next) {
       _.partial(db.getUserData, req.params.uname),
       _.partial(db.getAssignmentData, req.params.assign_id),
       _.partial(db.getSubmittedData, req.params.uname, req.params.assign_id),
-      _.partial(db.getCRFiles, req.params.uname, req.params.assign_id)],
+      _.partial(db.getCRFiles, req.params.uname, req.params.assign_id),
+      _.partial(db.getAssignmentGrade, req.params.uname, req.params.assign_id)],
 
   function(err, results) {
     if (err) {
@@ -141,12 +142,13 @@ exports.cr = function(req, res, next) {
       return;
     }
     
-    console.assert(results.length === 4);
+    console.assert(results.length === 5);
     res.render('cr', {
       student: results[0],
       assign: results[1],
       submitted: results[2],
-      files: results[3]
+      files: results[3],
+      grade: results[4]
     });
   });
 }
@@ -205,27 +207,31 @@ exports.saveCRComments = function(req, res, next) {
 };
 
 exports.gradedAssignment = function(req, res, next) {
-  async.parallel([
-      _.partial(db.getAssignmentGrade, req.params.uname, req.params.assign_id),
-      _.partial(db.getCRFiles, req.params.uname, req.params.assign_id),
-      _.partial(db.getAssignmentData, req.params.assign_id),
-      _.partial(db.getSubmittedData, req.params.uname, req.params.assign_id)
-      ],
+  if (req.session.role === 'teacher') {
+    exports.cr(req, res, next);
+  } else {
+    async.parallel([
+        _.partial(db.getAssignmentGrade, req.params.uname, req.params.assign_id),
+        _.partial(db.getCRFiles, req.params.uname, req.params.assign_id),
+        _.partial(db.getAssignmentData, req.params.assign_id),
+        _.partial(db.getSubmittedData, req.params.uname, req.params.assign_id)
+        ],
 
-      function(err, results) {
-        if (err) {
-          next(err);
-        } else {
-          res.render('graded_assignment', {
-            grade: results[0],
-            files: results[1],
-            assign: results[2],
-            submitted: results[3],
-            uname: req.params.uname,
-            assign_id: req.params.assign_id
-          });
-        }
-      });
+        function(err, results) {
+          if (err) {
+            next(err);
+          } else {
+            res.render('graded_assignment', {
+              grade: results[0],
+              files: results[1],
+              assign: results[2],
+              submitted: results[3],
+              uname: req.params.uname,
+              assign_id: req.params.assign_id
+            });
+          }
+        });
+  }
 };
 
 exports.getStudentGrades = function(req, res, next) {
