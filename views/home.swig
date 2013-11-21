@@ -74,6 +74,9 @@ None.
             Submitted Date
          </td>
          <td>
+            Due Date
+         </td>
+         <td>
             Action
          </td>
       </tr>
@@ -88,6 +91,9 @@ None.
          </td>
          <td>
             {{ assign.submitted_datetime }}
+         </td>
+         <td>
+            {{ assign.due_datetime }}
          </td>
          <td>
             <button onclick="showDialog('resubmit-dialog-{{ assign.id }}')">
