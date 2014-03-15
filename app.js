@@ -29,7 +29,7 @@ app.use(express.cookieParser());
 app.use(express.cookieSession({secret: 'LASNFQU#$%)*@J'}));
 
 var STATIC_PATH = path.join(__dirname, '/public');
-app.use(require('less-middleware')({ src: STATIC_PATH }));
+app.use(require('less-middleware')(STATIC_PATH));
 app.use(express.static(STATIC_PATH));
 app.use(app.router);
 
