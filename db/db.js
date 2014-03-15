@@ -91,7 +91,8 @@ exports.getAssignmentsNotSubmitted = function(uname, cb) {
 };
 
 exports.getUngradedAssignments = function(uname, cb) {
-  db.all('select a.name, a.id, submitted_url, submitted_datetime from ' +
+  db.all('select a.name, a.id, submitted_url, ' +
+      'submitted_datetime, due_datetime from ' +
       '(student_work w join assignments a on (a.id = w.assignment_id and ' +
       'w.uname = ?)) left join grades g on ' +
       '(g.uname = w.uname and g.assignment_id = a.id) where ' +
